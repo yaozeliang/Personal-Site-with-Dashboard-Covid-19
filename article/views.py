@@ -1,4 +1,6 @@
 from django.shortcuts import render,get_object_or_404,redirect
+from django.views.decorators.csrf import csrf_protect
+
 
 # Create your views here.
 from django.http import HttpResponse
@@ -64,10 +66,11 @@ def article_create(request):
         return render(request, 'article/create.html', context)
 
 # 删文章
-def article_delete(request, id):
-    # 根据 id 获取需要删除的文章
-    article = ArticlePost.objects.get(id=id)
-    # 调用.delete()方法删除文章
-    article.delete()
-    # 完成删除后返回文章列表
-    return redirect("article:article_list")
+@csrf_protect
+def article_safe_delete(request, id):
+    if request.method == 'POST':
+        article = ArticlePost.objects.get(id=id)
+        article.delete()
+        return redirect("article:article_list")
+    else:
+        return HttpResponse("仅允许post请求")
