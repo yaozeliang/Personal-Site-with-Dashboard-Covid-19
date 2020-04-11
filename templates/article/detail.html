@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    文章详情
+{% endblock title %}
+
+{% block content %}
+<!-- 文章详情 -->
+<div class="container">
+    <div class="row">
+        <!-- 标题及作者 -->
+        <h1 class="col-12 mt-4 mb-4">{{ article.title }}</h1>
+        <div class="col-12 alert alert-success">作者：{{ article.author }}
+            · <a href="{% url "article:article_delete" article.id %}">删除文章</a>
+        </div>
+        <!-- 文章正文 -->
+        <div class="col-12">
+            <p>{{ article.body|safe }}</p>
+        </div>
+        
+        
+        <a class="col-2 btn btn-info mr-5" href="#">编辑文章</a>
+        <a class="col-2 btn btn-danger" href="{% url "article:article_delete" article.id %}">删除文章</a>
+
+        
+    </div>
+</div>
+
+{% endblock content %}
+
+
+
+
