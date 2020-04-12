@@ -1,5 +1,6 @@
 from django.shortcuts import render,get_object_or_404,redirect
 from django.views.decorators.csrf import csrf_protect
+from django.views.generic.edit import CreateView
 
 
 # Create your views here.
@@ -94,9 +95,6 @@ def article_update(request, id):
         return render(request, 'article/update.html', context)
 
 
-
-
-
 @csrf_protect
 def article_safe_delete(request, id):
     if request.method == 'POST':
@@ -108,3 +106,11 @@ def article_safe_delete(request, id):
 
 
 
+# class ArticleCreateView(CreateView): # new
+#     model = ArticlePost
+#     template_name = 'article/create_crispy.html'
+#     fields = ['title','body']
+
+#     def form_valid(self, form): # new
+#         form.instance.author = self.request.user
+#         return super().form_valid(form)
