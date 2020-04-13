@@ -15,6 +15,7 @@ class ArticlePost(models.Model):
     body = models.TextField()
     created = models.DateTimeField('Created Time',default=timezone.now)
     updated = models.DateTimeField('Modified Time',auto_now=True)
+    total_views = models.PositiveIntegerField(default=0)
     
     class Meta:
         verbose_name = 'Article'
