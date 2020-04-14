@@ -6,9 +6,21 @@ from django.urls import reverse
 
 from django.utils import timezone
 
-# Create your models here.
-
 # 博客文章数据模型
+
+class Category(models.Model):
+    
+    name = models.CharField(max_length=100, blank=True)
+    created = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return self.name
+
+
+
+
+
+
 class ArticlePost(models.Model):
     author = models.ForeignKey(User, verbose_name='Author',on_delete=models.CASCADE)
     title = models.CharField('Title',max_length=100)
@@ -16,6 +28,13 @@ class ArticlePost(models.Model):
     created = models.DateTimeField('Created Time',default=timezone.now)
     updated = models.DateTimeField('Modified Time',auto_now=True)
     total_views = models.PositiveIntegerField(default=0)
+    category = models.ForeignKey(
+        Category,
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name='category'
+    )
     
     class Meta:
         verbose_name = 'Article'
@@ -24,5 +43,5 @@ class ArticlePost(models.Model):
     def __str__(self):
         return self.title
 
-    # def get_absolute_url(self): # new
-    #     return reverse('article_detail', args=[str(self.id)])
+    def get_absolute_url(self): # new
+        return reverse('article:article_detail', args=[str(self.id)])

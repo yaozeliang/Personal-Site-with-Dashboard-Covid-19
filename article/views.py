@@ -7,13 +7,14 @@ from django.db.models import Q
 
 # Create your views here.
 from django.http import HttpResponse
-from .models import ArticlePost
+from .models import ArticlePost,Category
 import markdown
 # 引入刚才定义的ArticlePostForm表单类
 from .forms import ArticlePostForm
 # 引入User模型
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from comment.models import Comment
 
 
 def article_list(request):
@@ -47,6 +48,7 @@ def article_list(request):
 @csrf_protect
 def article_detail(request, id):
     article = ArticlePost.objects.get(id=id)
+    comments = Comment.objects.filter(article=id)
 
     if request.user!= article.author:
         article.total_views += 1
@@ -58,15 +60,13 @@ def article_detail(request, id):
     md = markdown.Markdown(
         extensions=[
         'markdown.extensions.extra',
-        # 语法高亮扩展
         'markdown.extensions.codehilite',
         'markdown.extensions.toc',
         'markdown.extensions.tables',
         ]
     )
     article.body = md.convert(article.body)
-
-    context = { 'article': article,'toc': md.toc}
+    context = { 'article': article,'toc': md.toc,'comments': comments }
     return render(request, 'article/detail.html', context)
 
 @csrf_protect
@@ -79,13 +79,11 @@ def article_create(request):
         if article_post_form.is_valid():
             # 保存数据，但暂时不提交到数据库中
             new_article = article_post_form.save(commit=False)
-            # 指定数据库中 id=1 的用户为作者
-            # 如果你进行过删除数据表的操作，可能会找不到id=1的用户
-            # 此时请重新创建用户，并传入此用户的id
             new_article.author = User.objects.get(id=request.user.id)
-            # 将新文章保存到数据库中
+            if request.POST['category'] != 'none':
+                new_article.category = Category.objects.get(id=request.POST['category'])
             new_article.save()
-            # 完成后返回到文章列表
+            
             return redirect("article:article_list")
         # 如果数据不合法，返回错误信息
         else:
@@ -94,9 +92,9 @@ def article_create(request):
     else:
         # 创建表单类实例
         article_post_form = ArticlePostForm()
-        # 赋值上下文
-        context = { 'article_post_form': article_post_form }
-        # 返回模板
+        categorys = Category.objects.all()
+        context = { 'article_post_form': article_post_form, 'categorys': categorys }
+
         return render(request, 'article/create.html', context)
 
 @csrf_protect
@@ -112,20 +110,25 @@ def article_update(request, id):
         article_post_form = ArticlePostForm(data=request.POST)
 
         if article_post_form.is_valid():
+            if request.POST['category']!='none':
+                article.category = Category.objects.get(id=request.POST['category'])
+            else:
+                article.category = None
             article.title = request.POST['title']
             article.body = request.POST['body']
             article.save()
-            # 完成后返回到修改后的文章中。需传入文章的 id 值
+
             return redirect("article:article_detail", id=id)
         else:
             return HttpResponse("表单内容有误，请重新填写。")
 
     # 如果用户 GET 请求获取数据
     else:
-        # 创建表单类实例
-        article_post_form = ArticlePostForm()
-        # 赋值上下文，将 article 文章对象也传递进去，以便提取旧的内容
-        context = { 'article': article, 'article_post_form': article_post_form }
+        categorys = Category.objects.all()
+        context = { 
+            'article': article, 
+            'categorys': categorys,
+        }
         # 将响应返回到模板中
         return render(request, 'article/update.html', context)
 

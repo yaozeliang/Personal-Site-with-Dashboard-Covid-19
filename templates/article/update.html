@@ -13,6 +13,22 @@
                     <!-- 在 value 属性中指定文本框的初始值为旧的内容，即 article 对象中的 title 字段 -->
                     <input type="text" class="form-control" id="title" name="title" value="{{ article.title }}">
                 </div>
+
+                <div class="form-group">
+                    <label for="category">栏目</label>
+                    <select class="form-control" 
+                            id="category" 
+                            name="category">
+                    <option value="none">请选择栏目..</option>
+                    
+                    {% for category in categorys %}
+                        <option value="{{ category.id }}"  {% if category.id == article.category.id %} selected {% endif %}>
+                        {{ category }}
+                        </option>
+                    {% endfor %}
+                    </select>
+                </div>
+
                 <div class="form-group">
                     <label for="body">文章正文</label>
                     <!-- 文本域不需要 value 属性，直接在标签体中嵌入数据即可 -->

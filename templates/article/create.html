@@ -21,6 +21,22 @@
                     <!-- 文本框 -->
                     <input type="text" class="form-control" id="title" name="title">
                 </div>
+
+                    <!-- 文章栏目 -->
+                <div class="form-group">
+                    <label for="category">栏目</label>
+                    <select class="form-control" 
+                            id="category" 
+                            name="category"
+                    >
+                            <option value="none">请选择栏目..</option>
+                        {% for category in categorys %}
+                            <option value="{{ category.id }}">{{ category }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+
                 <!-- 文章正文 -->
                 <div class="form-group">
                     <label for="body">文章正文</label>

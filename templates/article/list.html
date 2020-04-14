@@ -10,27 +10,21 @@
 <!-- 定义放置文章标题的div容器 -->
 <div class="container">
 
-
+    <br>
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
-                {% if order == 'normal' %}
-                    <span style="color: gray">最新</span>
-                {% else %}
+
                     <a href="{% url 'article:article_list' %}?search={{ search }}">
                         最新
                     </a>
-                {% endif %}
+
             </li>
             <li class="breadcrumb-item">
-
-                {% if order == 'total_views' %}
-                    <span style="color: gray">最热</span>
-                {% else %}
                     <a href="{% url 'article:article_list' %}?order=total_views?search={{ search }}">
                         最热
                     </a>
-                {% endif %}
+ 
             </li>
         </ol>
     </nav>
@@ -43,6 +37,7 @@
                 <label class="sr-only">content</label>
                 <input type="text" 
                     class="form-control  mr-sm-2" 
+                    style="border-left-color: #f0ad4e"
                     name="search" 
                     placeholder="搜索文章..." 
                     required
@@ -52,12 +47,15 @@
         </div>
     </div>
 
+
+
     <!-- 新增，搜索提示语 -->
     {% if search %}
         {% if articles %}
             <h4><span style="color: red">"{{ search }}"</span>的搜索结果如下：</h4>
             <hr>        
         {% else %}
+            <br>
             <h4>暂无<span style="color: red">"{{ search }}"</span>有关的文章。</h4>
             <hr>
         {% endif %}
@@ -66,64 +64,91 @@
     
 
     <div class="row mt-2">
-
         {% for article in articles %}
-        <!-- 文章内容 -->
-        <div class="col-4 mb-4">
-            <div class="card h-100">
-                <h4 class="card-header">{{ article.title }}</h4>
+            <!-- 文章内容 -->
+            <div class="col-8">
+                <!-- 栏目 -->
+                {% if article.category %}
+                    <button type="button" 
+                        class="btn btn-sm mb-2
+                            {% if article.category.name == 'Html' %}
+                                btn-success
+                            {% elif article.category.name == 'Java' %}
+                                btn-danger
+                            {% elif article.category.name == 'Python' %}
+                                btn-warning
+                            {% endif %}
+                        ">
+                        {{ article.category }}
+                    </button>
+                {% endif %}
+                <!-- 标题 -->
+                <h4>
+                    <b>
+                        <a href="{% url 'article:article_detail' article.id %}"
+                           style="color: black;" 
+                        >
+                            {{ article.title }}
+                        </a>
+                    </b>
+                </h4>
                 <!-- 摘要 -->
-                <div class="card-body">
-                    <p class="card-text">{{ article.body|slice:'50'}}...</p>
+                <div>
+                    <p style="color: gray;">
+                        {{ article.body|slice:'100' }}...
+                    </p>
                 </div>
-
-                <div class="card-footer">
-                    <a href="{% url 'article:article_detail' article.id  %}" class="btn btn-primary btn-sm">阅读本文</a>
-                    <span>
-                        <small class="col align-self-end" style="color: gray;">浏览: {{ article.total_views }}</small>
+                <!-- 注脚 -->
+                <p>
+                    <!-- 附加信息 -->
+                    <span style="color: green;">
+                        {{ article.total_views }} 浏览&nbsp;&nbsp;&nbsp;
                     </span>
-                </div>
+                    <span style="color: blue;">
+                        {{ article.created|date:'Y-m-d' }} 发布&nbsp;&nbsp;&nbsp;
+                    </span>
+                    <span style="color: darkred;">
+                        {{ article.updated|date:'Y-m-d' }} 更新
+                    </span>
+                </p>
+                <hr>
             </div>
-        </div>
-        {% empty %}
-        <div class="no-post">暂时还没有发布的文章！</div>
         {% endfor %}
-
     </div>
 </div>
 
 <!-- 页码导航 -->
-<div class="pagination row">
+<div class="pagination col-8">
     <div class="m-auto">
         <span class="step-links">
             <!-- 如果不是第一页，则显示上翻按钮 -->
             {% if articles.has_previous %}
-                <a href="?page=1&order={{ order }}&search={{ search }}" class="btn btn-success">
+                <a href="?page=1&order={{ order }}&search={{ search }}" class="btn btn-success btn-sm ">
                     &laquo; First
                 </a>
                 <span>...</span>
                 <a href="?page={{ articles.previous_page_number }}&order={{ order }}&search={{ search }}" 
-                   class="btn btn-secondary"
+                   class="btn btn-secondary btn-sm"
                 >
                     {{ articles.previous_page_number }}
                 </a>
             {% endif %}
 
             <!-- 当前页面 -->
-            <span class="current btn btn-danger btn-lg">
+            <span class="current btn btn-danger btn-md">
                 {{ articles.number }}
             </span>
 
             <!-- 如果不是最末页，则显示下翻按钮 -->
             {% if articles.has_next %}
                 <a href="?page={{ articles.next_page_number }}&order={{ order }}&search={{ search }}"
-                   class="btn btn-secondary"
+                   class="btn btn-secondary btn-sm"
                 >
                     {{ articles.next_page_number }}
                 </a>
                 <span>...</span>
                 <a href="?page={{ articles.paginator.num_pages }}&order={{ order }}&search={{ search }}"
-                   class="btn btn-success"
+                   class="btn btn-success btn-sm"
                 >
                     <!-- {{ articles.paginator.num_pages }} &raquo; -->
                     Last &raquo;
