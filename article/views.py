@@ -2,7 +2,8 @@ from django.shortcuts import render,get_object_or_404,redirect
 from django.views.decorators.csrf import csrf_protect
 from django.views.generic.edit import CreateView
 from django.core.paginator import Paginator
-
+# 引入 Q 对象
+from django.db.models import Q
 
 # Create your views here.
 from django.http import HttpResponse
@@ -15,16 +16,30 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 
 
-@csrf_protect
 def article_list(request):
+    search = request.GET.get('search')
+    order = request.GET.get('order')
+    # 用户搜索逻辑
 
-    article_list = ArticlePost.objects.all()
+    if search:
+        article_list = ArticlePost.objects.filter(
+        Q(title__icontains=search) | Q(body__icontains=search))
+    else:
+        search = ''
+        article_list = ArticlePost.objects.all()
+
+    if order == 'total_views':
+
+        article_list = article_list.order_by('-total_views')
+    else:
+        pass
+
     paginator = Paginator(article_list, 3)
     page = request.GET.get('page')
-    
     articles = paginator.get_page(page)
 
-    context = { 'articles': articles }
+    # 增加 search 到 context
+    context = { 'articles': articles, 'order': order, 'search': search }
     return render(request, 'article/list.html', context)
 
 
@@ -39,16 +54,19 @@ def article_detail(request, id):
 
 
     # 将markdown语法渲染成html样式
-    article.body = markdown.markdown(article.body,
+
+    md = markdown.Markdown(
         extensions=[
-        # 包含 缩写、表格等常用扩展
         'markdown.extensions.extra',
         # 语法高亮扩展
-        'markdown.extensions.tables',
         'markdown.extensions.codehilite',
-        ])
+        'markdown.extensions.toc',
+        'markdown.extensions.tables',
+        ]
+    )
+    article.body = md.convert(article.body)
 
-    context = { 'article': article }
+    context = { 'article': article,'toc': md.toc}
     return render(request, 'article/detail.html', context)
 
 @csrf_protect

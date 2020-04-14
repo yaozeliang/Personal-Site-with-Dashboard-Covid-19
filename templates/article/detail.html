@@ -10,9 +10,11 @@
 <div class="container">
     <div class="row">
         <!-- 标题及作者 -->
-        <h1 class="col-12 mt-4 mb-4">{{ article.title }}</h1>
-        <div class="col-12 alert alert-success">作者：{{ article.author }}
-        <div>浏览：{{ article.total_views }}</div>
+    <div class="col-9">
+        <h1 class="mt-4 mb-4">{{ article.title }}</h1>
+        <div class="alert alert-success">作者：{{ article.author }}
+        <br>
+        浏览：{{ article.total_views }}
         </div>
 
         <!-- 文章正文 -->
@@ -28,6 +30,17 @@
         {% endif %}
 
         
+    </div>
+
+    <!-- 新增的目录 -->
+    <div class="col-3 mt-4">
+        <h4><strong>目录</strong></h4>
+        <hr>
+        <div>
+            {{ toc|safe }}
+        </div>
+    </div>
+
     </div>
 </div>
 

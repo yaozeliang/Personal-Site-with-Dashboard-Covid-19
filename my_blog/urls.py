@@ -13,6 +13,7 @@ urlpatterns = [
     path('article/', include('article.urls')),
     path('userprofile/', include('userprofile.urls')),
     path('password-reset/', include('password_reset.urls')),
+    path('comment/', include('comment.urls')),
     
 ]
 

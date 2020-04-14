@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'article',
     'userprofile',
     'crispy_forms', 
+    'comment',
 
 ]
 
