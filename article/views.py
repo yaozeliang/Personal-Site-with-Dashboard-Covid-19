@@ -83,6 +83,8 @@ def article_create(request):
             if request.POST['category'] != 'none':
                 new_article.category = Category.objects.get(id=request.POST['category'])
             new_article.save()
+            # 新增代码，保存 tags 的多对多关系
+            article_post_form.save_m2m()
             
             return redirect("article:article_list")
         # 如果数据不合法，返回错误信息

@@ -3,6 +3,9 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.urls import reverse
 
+# Django-taggit
+from taggit.managers import TaggableManager
+
 
 from django.utils import timezone
 
@@ -35,6 +38,7 @@ class ArticlePost(models.Model):
         on_delete=models.CASCADE,
         related_name='category'
     )
+    tags = TaggableManager(blank=True)
     
     class Meta:
         verbose_name = 'Article'
@@ -45,3 +49,6 @@ class ArticlePost(models.Model):
 
     def get_absolute_url(self): # new
         return reverse('article:article_detail', args=[str(self.id)])
+
+
+        
