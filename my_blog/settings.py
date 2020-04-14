@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'userprofile',
     'crispy_forms', 
     'comment',
+    'taggit',
 
 ]
 
