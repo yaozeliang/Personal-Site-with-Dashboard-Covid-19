@@ -18,29 +18,52 @@ from comment.models import Comment
 
 
 def article_list(request):
+    # 从 url 中提取查询参数
+    search = request.GET.get('search')
+    order = request.GET.get('order')
+    category = request.GET.get('category')
+    tag = request.GET.get('tag')
     search = request.GET.get('search')
     order = request.GET.get('order')
     # 用户搜索逻辑
 
+    # 初始化查询集
+    article_list = ArticlePost.objects.all()
+
+    # 搜索查询集
     if search:
-        article_list = ArticlePost.objects.filter(
-        Q(title__icontains=search) | Q(body__icontains=search))
+        article_list = article_list.filter(
+            Q(title__icontains=search) |
+            Q(body__icontains=search)
+        )
     else:
         search = ''
-        article_list = ArticlePost.objects.all()
 
+    # 栏目查询集
+    if category is not None and category.isdigit():
+        article_list = article_list.filter(category=category)
+
+    # 标签查询集
+    if tag and tag != 'None':
+        article_list = article_list.filter(tags__name__in=[tag])
+
+    # 查询集排序
     if order == 'total_views':
-
         article_list = article_list.order_by('-total_views')
-    else:
-        pass
 
     paginator = Paginator(article_list, 3)
     page = request.GET.get('page')
     articles = paginator.get_page(page)
 
-    # 增加 search 到 context
-    context = { 'articles': articles, 'order': order, 'search': search }
+    # 需要传递给模板（templates）的对象
+    context = {
+        'articles': articles,
+        'order': order,
+        'search': search,
+        'category': category,
+        'tag': tag,
+    }
+
     return render(request, 'article/list.html', context)
 
 
