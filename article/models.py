@@ -39,7 +39,10 @@ class ArticlePost(models.Model):
         related_name='category'
     )
     tags = TaggableManager(blank=True)
+    avatar = models.ImageField(upload_to='article/%Y%m%d/', blank=True)
     
+
+
     class Meta:
         verbose_name = 'Article'
         ordering = ('-created',)
@@ -51,4 +54,3 @@ class ArticlePost(models.Model):
         return reverse('article:article_detail', args=[str(self.id)])
 
 
-        

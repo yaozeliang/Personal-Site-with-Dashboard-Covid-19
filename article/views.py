@@ -141,6 +141,8 @@ def article_update(request, id):
                 article.category = None
             article.title = request.POST['title']
             article.body = request.POST['body']
+
+            article.tags.set(*request.POST.get('tags').split(','), clear=True)
             article.save()
 
             return redirect("article:article_detail", id=id)
