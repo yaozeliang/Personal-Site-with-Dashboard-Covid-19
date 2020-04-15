@@ -11,7 +11,7 @@
         <div class="col-12">
             <br>
             <!-- 提交文章的表单 -->
-            <form method="post" action=".">
+            <form method="post" action="." enctype="multipart/form-data">
                 <!-- Django中需要POST数据的地方都必须有csrf_token -->
                 {% csrf_token %}
                 
@@ -21,6 +21,13 @@
                     <!-- 文本框 -->
                     <input type="text" class="form-control" id="title" name="title">
                 </div>
+
+                <!-- 文章标题图 -->
+                <div class="form-group">
+                    <label for="avatar">标题图</label>
+                    <input type="file" class="form-control-file" name="avatar" id="avatar" required>
+                </div>
+                
 
                 <!-- 文章栏目 -->
                 <div class="form-group">
@@ -43,6 +50,7 @@
                         class="form-control col-3" 
                         id="tags" 
                         name="tags"
+                        placeholder="用逗号分离"
                     >
                 </div>
 

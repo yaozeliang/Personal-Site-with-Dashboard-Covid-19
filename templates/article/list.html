@@ -11,36 +11,41 @@
 <div class="container">
   <br />
   <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item">
-        <a href="{% url 'article:article_list' %}?search={{ search }}&category={{ category }}&tag={{ tag }}">
+    <ol class="breadcrumb" style="background-color: white; padding: 0 0 0 2px; font-size: 1.2em">
+      <li class="breadcrumb-item" >
+        <a  class="no-underline hvr-grow-rotate"
+           style="color: gray" 
+           href="{% url 'article:article_list' %}?search={{ search }}&category={{ category }}&tag={{ tag }}">
           最新
         </a>
       </li>
-      <li class="breadcrumb-item">
-        <a
-          href="{% url 'article:article_list' %}?order=total_views?search={{ search }}&category={{ category }}&tag={{ tag }}"
+      <li class="breadcrumb-item" >
+        <a style="color: gray" 
+           class="no-underline hvr-grow-rotate"
+          href="{% url 'article:article_list' %}?order=total_views&search={{ search }}&category={{ category }}&tag={{ tag }}"
         >最热
         </a>
       </li>
 
-      <li class="breadcrumb-item">
-        <a
-          href="{% url 'article:article_list' %}"
+      <li class="breadcrumb-item" >
+        <a style="color: gray"
+           class="no-underline hvr-grow-rotate"
+           href="{% url 'article:article_list' %}"
         >全部文章
         </a>
       </li>
+      
     </ol>
   </nav>
 
   <!-- 新增，搜索栏 -->
   <div class="row">
-    <div class="col-auto mr-auto">
+    <div class="col-md-8">
       <form class="form-inline">
         <label class="sr-only">content</label>
         <input
           type="text"
-          class="form-control mr-sm-2"
+          class="form-control  mr-sm-2"
           style="border-left-color: #f0ad4e;"
           name="search"
           placeholder="搜索文章..."
@@ -48,49 +53,40 @@
         />
         <button type="submit" class="btn btn-warning">Search</button>
       </form>
+      <br>
     </div>
   </div>
 
   <!-- 新增，搜索提示语 -->
-  {% if search %} {% if articles %}
+  {% if search %} 
+  
+  {% if articles %}
   <h4><span style="color: red;">"{{ search }}"</span>的搜索结果如下：</h4>
   <hr />
   {% else %}
   <br />
   <h4>暂无<span style="color: red;">"{{ search }}"</span>有关的文章。</h4>
   <hr />
-  {% endif %} {% endif %}
+  {% endif %}
+  
+  {% endif %}
 
   <div class="row mt-2">
     {% for article in articles %}
-    <!-- 文章内容 -->
-    <div class="col-8">
+ 
+        {% if article.avatar %}
+            <div class="col-3">
+                <img src="{{ article.avatar.url }}" 
+                      alt="avatar" 
+                      class="img-fluid"
+                      style="border-radius: 5%"
+                >
+            </div>
+        {% endif %}
+
       <!-- 栏目 -->
-      {% if article.category %}
-      <a
-        role="button"
-        href="{% url 'article:article_list' %}?category={{ article.category.id }}"
-        class="btn btn-sm mb-2 
-        {% if article.category.name == 'Html' %} btn-success 
-        {% elif article.category.name == 'Java' %} btn-danger
-        {% elif article.category.name == 'Python' %} btn-warning {% endif %}"
-      >
-        {{ article.category }}
-      </a>
-      {% endif %}
-
-      <!-- Tags -->
-      <span>
-        {% for tag in article.tags.all %}
-        <a
-          href="{% url 'article:article_list' %}?tag={{ tag }}"
-          class="badge badge-pill badge-secondary"
-        >
-          {{ tag }}
-        </a>
-        {% endfor %}
-      </span>
-
+    <div class="col">
+      
       <!-- 标题 -->
       <h4>
         <b>
@@ -103,32 +99,65 @@
         </b>
       </h4>
       <!-- 摘要 -->
-      <div>
-        <p style="color: gray;">
+      
+        <p style="color: gray;" >
           {{ article.body|slice:'100' }}...
         </p>
-      </div>
-      <!-- 注脚 -->
-      <p>
-        <!-- 附加信息 -->
-        <span style="color: green;">
-          {{ article.total_views }} 浏览&nbsp;&nbsp;&nbsp;
-        </span>
-        <span style="color: blue;">
-          {{ article.created|date:'Y-m-d' }} 发布&nbsp;&nbsp;&nbsp;
-        </span>
-        <span style="color: darkred;">
-          {{ article.updated|date:'Y-m-d' }} 更新
-        </span>
+      
+      <h5>
+      {% if article.category %}
+      <a
+        role="button"
+        href="{% url 'article:article_list' %}?category={{ article.category.id }}"
+        class="btn btn-sm mb-2 
+        {% if article.category.name == 'Html' %} btn-success  btn-sm
+        {% elif article.category.name == 'Java' %} btn-danger btn-sm
+        {% elif article.category.name == 'Python' %} btn-info btn-sm 
+        {% endif %}"
+      ><i class="fas fa-code"></i> &nbsp;{{ article.category }}&nbsp;</a>
+      {% endif %}
+
+      <!-- Tags -->
+      <span>
+        {% for tag in article.tags.all %}
+        <a
+          href="{% url 'article:article_list' %}?tag={{ tag }}"
+          class="badge badge-pill badge-light"
+        >
+          {{ tag }}
+        </a>
+        {% endfor %}
+      </span>
+    </h5>
+
+      <p >
+      <span>
+          <i class="fas fa-user-edit" style="color:rgb(218, 119, 7)"></i>
+          {{ article.author }}&nbsp;&nbsp;&nbsp;
+      </span>
+
+       <span>
+          <i class="fas fa-eye" style="color: lightskyblue;"></i>
+          {{ article.total_views }}&nbsp;&nbsp;&nbsp;
+      </span>
+      <span>
+          <i class="fas fa-comments" style="color: yellowgreen;"></i>
+          {{ article.comments.count }}&nbsp;&nbsp;&nbsp;
+      </span>
+      <span>
+        <i class="fas fa-calendar-alt" style="color:coral"></i>
+          {{ article.created|date:'Y-m-d' }}
+      </span>
       </p>
-      <hr />
     </div>
+      <hr style="width: 100%;"/>
+      
     {% endfor %}
+  
   </div>
-</div>
 
 <!-- 页码导航 -->
-<div class="pagination col-8">
+<div class="pagination">
   <div class="m-auto">
     <span class="step-links">
       <!-- 如果不是第一页，则显示上翻按钮 -->
@@ -173,5 +202,5 @@
     </span>
   </div>
 </div>
-
+</div>
 {% endblock content %}

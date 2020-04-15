@@ -7,6 +7,8 @@ from django.urls import path,include
 # 新引入的模块
 from django.conf import settings
 from django.conf.urls.static import static
+import notifications.urls
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -14,7 +16,7 @@ urlpatterns = [
     path('userprofile/', include('userprofile.urls')),
     path('password-reset/', include('password_reset.urls')),
     path('comment/', include('comment.urls')),
-    
+    path('inbox/notifications/', include(notifications.urls, namespace='notifications')),
 ]
 
 

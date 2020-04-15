@@ -15,6 +15,8 @@ from .forms import ArticlePostForm
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from comment.models import Comment
+from comment.forms import CommentForm
+
 
 
 def article_list(request):
@@ -23,8 +25,7 @@ def article_list(request):
     order = request.GET.get('order')
     category = request.GET.get('category')
     tag = request.GET.get('tag')
-    search = request.GET.get('search')
-    order = request.GET.get('order')
+
     # 用户搜索逻辑
 
     # 初始化查询集
@@ -48,7 +49,7 @@ def article_list(request):
         article_list = article_list.filter(tags__name__in=[tag])
 
     # 查询集排序
-    if order == 'total_views':
+    if order=='total_views':
         article_list = article_list.order_by('-total_views')
 
     paginator = Paginator(article_list, 3)
@@ -72,6 +73,7 @@ def article_list(request):
 def article_detail(request, id):
     article = ArticlePost.objects.get(id=id)
     comments = Comment.objects.filter(article=id)
+    comment_form = CommentForm()
 
     if request.user!= article.author:
         article.total_views += 1
@@ -89,15 +91,15 @@ def article_detail(request, id):
         ]
     )
     article.body = md.convert(article.body)
-    context = { 'article': article,'toc': md.toc,'comments': comments }
+    context = { 'article': article,'toc': md.toc,'comments': comments,'comment_form': comment_form}
     return render(request, 'article/detail.html', context)
 
-@csrf_protect
+
 def article_create(request):
     # 判断用户是否提交数据
     if request.method == "POST":
         # 将提交的数据赋值到表单实例中
-        article_post_form = ArticlePostForm(data=request.POST)
+        article_post_form = ArticlePostForm(request.POST,request.FILES)
         # 判断提交的数据是否满足模型的要求
         if article_post_form.is_valid():
             # 保存数据，但暂时不提交到数据库中
@@ -122,7 +124,6 @@ def article_create(request):
 
         return render(request, 'article/create.html', context)
 
-@csrf_protect
 @login_required(login_url='/userprofile/login/')
 def article_update(request, id):
 
@@ -132,13 +133,18 @@ def article_update(request, id):
         return HttpResponse("抱歉，你无权修改这篇文章。")
 
     if request.method == "POST":
-        article_post_form = ArticlePostForm(data=request.POST)
+        article_post_form = ArticlePostForm(request.POST,request.FILES)
 
         if article_post_form.is_valid():
             if request.POST['category']!='none':
                 article.category = Category.objects.get(id=request.POST['category'])
             else:
                 article.category = None
+
+
+            if request.FILES.get('avatar'):
+                article.avatar = request.FILES.get('avatar')
+
             article.title = request.POST['title']
             article.body = request.POST['body']
 
@@ -155,6 +161,7 @@ def article_update(request, id):
         context = { 
             'article': article, 
             'categorys': categorys,
+            'tags': ','.join([x for x in article.tags.names()]),
         }
         # 将响应返回到模板中
         return render(request, 'article/update.html', context)

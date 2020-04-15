@@ -5,11 +5,15 @@ from django.urls import reverse
 
 # Django-taggit
 from taggit.managers import TaggableManager
-
-
 from django.utils import timezone
+from PIL import Image
+# 引入imagekit
+from imagekit.models import ProcessedImageField
+from imagekit.processors import ResizeToFit
 
-# 博客文章数据模型
+
+
+
 
 class Category(models.Model):
     
@@ -18,8 +22,6 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
-
-
 
 
 
@@ -38,10 +40,17 @@ class ArticlePost(models.Model):
         on_delete=models.CASCADE,
         related_name='category'
     )
-    tags = TaggableManager(blank=True)
-    avatar = models.ImageField(upload_to='article/%Y%m%d/', blank=True)
-    
 
+    tags = TaggableManager(blank=True)
+
+    # avatar = models.ImageField(upload_to='article/%Y%m%d/', blank=True)
+
+    avatar = ProcessedImageField(
+        upload_to='article/%Y%m%d',
+        processors=[ResizeToFit(width=350)],
+        format='JPEG',
+        options={'quality': 100},
+    )
 
     class Meta:
         verbose_name = 'Article'
@@ -50,7 +59,16 @@ class ArticlePost(models.Model):
     def __str__(self):
         return self.title
 
-    def get_absolute_url(self): # new
+    def get_absolute_url(self): 
         return reverse('article:article_detail', args=[str(self.id)])
+
+    
+
+
+
+
+    
+
+    
 
 
