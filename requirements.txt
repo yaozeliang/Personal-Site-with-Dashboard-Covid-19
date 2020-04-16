@@ -1,5 +1,5 @@
 asgiref==3.2.7
-Django==2.1
+Django==2.2
 django-appconf==1.0.4
 django-ckeditor==5.9.0
 django-crispy-forms==1.9.0
