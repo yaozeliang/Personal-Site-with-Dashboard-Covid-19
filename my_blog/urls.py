@@ -17,6 +17,7 @@ urlpatterns = [
     path('password-reset/', include('password_reset.urls')),
     path('comment/', include('comment.urls')),
     path('inbox/notifications/', include(notifications.urls, namespace='notifications')),
+    path('notice/', include('notice.urls')),
 ]
 
 

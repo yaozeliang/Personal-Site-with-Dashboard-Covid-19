@@ -6,6 +6,9 @@ from article.models import ArticlePost
 from .forms import CommentForm
 from . models import Comment
 
+from notifications.signals import notify
+from django.contrib.auth.models import User
+
 # 文章评论
 @login_required(login_url='/userprofile/login/')
 def post_comment(request, article_id):
@@ -19,6 +22,17 @@ def post_comment(request, article_id):
             new_comment.article = article
             new_comment.user = request.user
             new_comment.save()
+
+            # 新增代码，给管理员发送通知
+            if not request.user.is_superuser:
+                notify.send(
+                        request.user,
+                        recipient=User.objects.filter(is_superuser=1),
+                        verb='回复了你',
+                        target=article,
+                        action_object=new_comment,
+                    )
+
             return redirect(article)
         else:
             return HttpResponse("表单内容有误，请重新填写。")

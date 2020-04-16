@@ -47,7 +47,7 @@ class ArticlePost(models.Model):
 
     avatar = ProcessedImageField(
         upload_to='article/%Y%m%d',
-        processors=[ResizeToFit(width=350)],
+        processors=[ResizeToFit(width=400)],
         format='JPEG',
         options={'quality': 100},
     )

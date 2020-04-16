@@ -1,4 +1,6 @@
-{% extends "base.html" %} {% load static %} 
+{% extends "base.html" %} 
+
+{% load static %} 
 
 {% block title %}
 首页
@@ -9,6 +11,8 @@
 
 <!-- 定义放置文章标题的div容器 -->
 <div class="container">
+<div class="row">
+<main class="col-md-8 mr-auto">
   <br />
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb" style="background-color: white; padding: 0 0 0 2px; font-size: 1.2em">
@@ -39,8 +43,7 @@
   </nav>
 
   <!-- 新增，搜索栏 -->
-  <div class="row">
-    <div class="col-md-8">
+
       <form class="form-inline">
         <label class="sr-only">content</label>
         <input
@@ -54,8 +57,7 @@
         <button type="submit" class="btn btn-warning">Search</button>
       </form>
       <br>
-    </div>
-  </div>
+
 
   <!-- 新增，搜索提示语 -->
   {% if search %} 
@@ -85,10 +87,10 @@
         {% endif %}
 
       <!-- 栏目 -->
-    <div class="col">
+    <div class="col-9">
       
       <!-- 标题 -->
-      <h4>
+      <h5>
         <b>
           <a
             href="{% url 'article:article_detail' article.id %}"
@@ -97,38 +99,37 @@
             {{ article.title }}
           </a>
         </b>
-      </h4>
+      </h5>
       <!-- 摘要 -->
       
         <p style="color: gray;" >
-          {{ article.body|slice:'100' }}...
+          {{ article.body|slice:'50' }}...
         </p>
       
-      <h5>
+      <p>
       {% if article.category %}
+      <span>
       <a
         role="button"
         href="{% url 'article:article_list' %}?category={{ article.category.id }}"
-        class="btn btn-sm mb-2 
-        {% if article.category.name == 'Html' %} btn-success  btn-sm
-        {% elif article.category.name == 'Java' %} btn-danger btn-sm
-        {% elif article.category.name == 'Python' %} btn-info btn-sm 
-        {% endif %}"
-      ><i class="fas fa-code"></i> &nbsp;{{ article.category }}&nbsp;</a>
+        class="btn btn-sm mb-1 btn-success"><i class="fas fa-code-branch"></i>&nbsp;{{ article.category }}&nbsp;</a>
       {% endif %}
+    </span>
 
       <!-- Tags -->
-      <span>
-        {% for tag in article.tags.all %}
+      {% for tag in article.tags.all %}
+        <span>
         <a
           href="{% url 'article:article_list' %}?tag={{ tag }}"
-          class="badge badge-pill badge-light"
+          class="badge badge-secondary"
         >
           {{ tag }}
         </a>
-        {% endfor %}
       </span>
-    </h5>
+      {% empty %}
+      {% endfor %}
+  
+    </p>
 
       <p >
       <span>
@@ -151,7 +152,6 @@
       </p>
     </div>
       <hr style="width: 100%;"/>
-      
     {% endfor %}
   
   </div>
@@ -202,5 +202,75 @@
     </span>
   </div>
 </div>
+
+</main>
+
+<aside class="col-md-4  mt-md-5">
+
+
+    
+<div class="row notification">
+<div class="card col-10 ml-md-2 mb-3">
+    <div class="card-body">
+      <p class="card-text"><i class="fas fa-bullhorn"></i> 修改海量bug中</p>
+    </div>
+</div>
+</div>
+
+
+  
+<div class="row contanct">
+  <div class="card col-10 ml-md-2 mb-3">
+    <div class="card-body pb-0">
+      <h5 class="card-title">About Me
+        <a href="https://www.linkedin.com/in/zeliang-yao-359183114/">
+          <i class="fab fa-linkedin"></i></a>
+
+        <a href="https://github.com/yaozeliang/">
+          <i class="fab fa-github" style="color: lightslategrey"></i></a>
+      </h5>
+      <p class="card-text mb-0"> Python爱好者, 玻尿酸采购直邮</p>
+      <p class="card-text mb-0"><span><i class="far fa-envelope "></i></span> zeliang.yao@efrei.net</p>
+      <p><span><i class="fab fa-weixin" style="color: yellowgreen"></i></span> alpha94511</p>
+      
+    </div>
+  </div>
+</div>
+
+
+<div class="row gallery">
+  <div class="card col-10 ml-md-2 mb-3">
+
+    <div class="card-body ">
+      <h6 class="card-title">Category <span><i class="fas fa-code-branch"></i></span> </h6>
+      <p class="card-text">
+
+
+      </p>
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+</div>
+
+
+
+
+
+  
+</aside>
+
+
+
+
+
+
+</div>
+
 </div>
 {% endblock content %}
