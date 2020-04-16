@@ -139,6 +139,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 
+
 # SMTP服务器，改为你的邮箱的smtp!
 EMAIL_HOST = 'smtp.gmail.com'
 # 改为你自己的邮箱名！
