@@ -16,8 +16,8 @@ django-taggit = "*"
 django-imagekit = "*"
 django-ckeditor = "*"
 django-notifications-hq = "*"
-gunicorn = "==19.9.0"
-whitenoise = "*"
+gunicorn = "===19.9.0"
+whitenoise = "==3.3.1"
 
 [requires]
 python_version = "3.8"
