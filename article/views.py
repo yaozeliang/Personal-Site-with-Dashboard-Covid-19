@@ -25,7 +25,8 @@ def article_list(request):
     order = request.GET.get('order')
     category = request.GET.get('category')
     tag = request.GET.get('tag')
-
+    categories = Category.objects.all()
+    all_tags= ArticlePost.tags.all()
     # 用户搜索逻辑
 
     # 初始化查询集
@@ -52,7 +53,7 @@ def article_list(request):
     if order=='total_views':
         article_list = article_list.order_by('-total_views')
 
-    paginator = Paginator(article_list, 3)
+    paginator = Paginator(article_list, 4)
     page = request.GET.get('page')
     articles = paginator.get_page(page)
 
@@ -63,6 +64,9 @@ def article_list(request):
         'search': search,
         'category': category,
         'tag': tag,
+        'categories':categories,
+        'all_tags':all_tags,
+
     }
 
     return render(request, 'article/list.html', context)
@@ -123,6 +127,7 @@ def article_create(request):
         context = { 'article_post_form': article_post_form, 'categorys': categorys }
 
         return render(request, 'article/create.html', context)
+
 
 @login_required(login_url='/userprofile/login/')
 def article_update(request, id):

@@ -50,6 +50,7 @@ class ArticlePost(models.Model):
         processors=[ResizeToFit(width=400)],
         format='JPEG',
         options={'quality': 100},
+        blank=True,
     )
 
     class Meta:

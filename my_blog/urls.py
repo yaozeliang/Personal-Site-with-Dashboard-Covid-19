@@ -2,6 +2,7 @@
 
 from django.contrib import admin
 from django.urls import path,include
+# from article import urls
 
 # 新引入的模块
 from django.conf import settings

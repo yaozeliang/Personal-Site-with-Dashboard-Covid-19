@@ -16,7 +16,7 @@ django-taggit = "*"
 django-imagekit = "*"
 django-ckeditor = "*"
 django-notifications-hq = "*"
-gunicorn = "*"
+gunicorn = "==19.9.0"
 whitenoise = "*"
 
 [requires]

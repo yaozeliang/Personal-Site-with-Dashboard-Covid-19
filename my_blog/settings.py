@@ -32,13 +32,13 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'simpleui',
-    'article',
-    'userprofile',
     'crispy_forms', 
-    'comment',
     'password_reset',
+    'article.apps.ArticleConfig',
+    'comment.apps.CommentConfig',
+    'userprofile.apps.UserprofileConfig',
     'notifications',
-    'notice',
+    'notice.apps.NoticeConfig',
     'taggit',
     'imagekit',
     'ckeditor',
@@ -116,9 +116,15 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+# LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+# TIME_ZONE = 'UTC'
+
+LANGUAGE_CODE = 'zh-hans'
+
+TIME_ZONE = 'Asia/Shanghai'
+
+
 
 USE_I18N = True
 

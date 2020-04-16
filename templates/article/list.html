@@ -73,11 +73,11 @@
   
   {% endif %}
 
-  <div class="row mt-2">
+  <div class="row mt-2 ">
     {% for article in articles %}
  
         {% if article.avatar %}
-            <div class="col-3">
+            <div class="col-3 pb-0">
                 <img src="{{ article.avatar.url }}" 
                       alt="avatar" 
                       class="img-fluid"
@@ -87,7 +87,7 @@
         {% endif %}
 
       <!-- 栏目 -->
-    <div class="col-9">
+    <div class="col-9 pb-0">
       
       <!-- 标题 -->
       <h5>
@@ -100,28 +100,41 @@
           </a>
         </b>
       </h5>
-      <!-- 摘要 -->
       
-        <p style="color: gray;" >
+      
+        <!-- <p style="color: gray;" >
           {{ article.body|slice:'50' }}...
-        </p>
+        </p> -->
       
       <p>
-      {% if article.category %}
-      <span>
+    <!-- {% if article.category %}
+ 
       <a
         role="button"
         href="{% url 'article:article_list' %}?category={{ article.category.id }}"
-        class="btn btn-sm mb-1 btn-success"><i class="fas fa-code-branch"></i>&nbsp;{{ article.category }}&nbsp;</a>
-      {% endif %}
-    </span>
+        class="btn btn-sm btn-info"><i class="fas fa-code-branch"></i>&nbsp;{{ article.category }}</a>
+   
+    {% endif %} -->
 
+
+    {% if article.category %}
+ 
+    <a
+      role="button"
+      href="{% url 'article:article_list' %}?category={{ article.category.id }}"
+      class="btn  btn-outline-secondary btn-sm" 
+    ><i class="fas fa-code-branch" style="color:palevioletred"></i>&nbsp;{{ article.category }}</a>
+    
+    {% endif %}
+
+    <!-- <span><i class="fas fa-code-branch" style="color:palevioletred"></i></span> -->
       <!-- Tags -->
       {% for tag in article.tags.all %}
+
         <span>
         <a
           href="{% url 'article:article_list' %}?tag={{ tag }}"
-          class="badge badge-secondary"
+          class="badge badge-info" 
         >
           {{ tag }}
         </a>
@@ -164,7 +177,7 @@
       {% if articles.has_previous %}
       <a
         href="?page=1&order={{ order }}&search={{ search }}&category={{ category }}&tag={{ tag }}"
-        class="btn btn-info btn-sm"
+        class="btn btn-outline-dark btn-sm"
       >
         &laquo; First
       </a>
@@ -193,7 +206,7 @@
       <span>...</span>
       <a
         href="?page={{ articles.paginator.num_pages }}&order={{ order }}&search={{ search }}&category={{ category }}&tag={{ tag }}"
-        class="btn btn-info btn-sm"
+        class="btn btn-outline-dark btn-sm"
       >
         <!-- {{ articles.paginator.num_pages }} &raquo; -->
         Last &raquo;
@@ -238,16 +251,42 @@
 </div>
 
 
-<div class="row gallery">
+<div class="row cat-tags">
   <div class="card col-10 ml-md-2 mb-3">
 
     <div class="card-body ">
-      <h6 class="card-title">Category <span><i class="fas fa-code-branch"></i></span> </h6>
-      <p class="card-text">
+      <h6 class="card-title"><span><i class="fas fa-code-branch" style="color:palevioletred"></i></span> Category</h6>
+      
+      <div class="card-body row">
+        {% for cat in categories %}
+        <div class="col-auto mb-2">
+          <a
+          href="{% url 'article:article_list' %}?category={{ cat.id }}"
+          class="btn btn-outline-dark btn-sm ">{{ cat.name }}</a>
+        </div>
 
+        {% endfor %}
+      </div>
 
-      </p>
+      
 
+      <h6 class="card-title"><span><i class="fas fa-tags" style="color: mediumslateblue;"></i></span> Tags</h6>
+
+      <h6>
+      {% for tag in all_tags %}
+
+      <span>
+          <a
+            href="{% url 'article:article_list' %}?tag={{ tag }}"
+            class="badge badge-light" 
+          >
+            {{ tag }}
+     
+        </a></span>
+
+      {% endfor %}
+
+    </h6>
     </div>
   </div>
 </div>
