@@ -17,17 +17,19 @@
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb" style="background-color: white; padding: 0 0 0 2px; font-size: 1.2em">
       <li class="breadcrumb-item" >
-        <a  class="no-underline hvr-grow-rotate"
+        <a  class="no-underline "
            style="color: gray" 
            href="{% url 'article:article_list' %}?search={{ search }}&category={{ category }}&tag={{ tag }}">
-          最新
+          <span><i class="fas fa-book-open" style="color: rosybrown;"></i></span> 最新
         </a>
       </li>
+
+      
       <li class="breadcrumb-item" >
         <a style="color: gray" 
-           class="no-underline hvr-grow-rotate"
+           class="no-underline "
           href="{% url 'article:article_list' %}?order=total_views&search={{ search }}&category={{ category }}&tag={{ tag }}"
-        >最热
+        ><span></span><i class="fab fa-hotjar" style="color: red;"></i></span> 最热
         </a>
       </li>
 
@@ -225,7 +227,7 @@
 <div class="row notification">
 <div class="card col-10 ml-md-2 mb-3">
     <div class="card-body">
-      <p class="card-text"><i class="fas fa-bullhorn"></i> 修改海量bug中</p>
+      <p class="card-text"><i class="fas fa-bullhorn fa-2x"></i> 修改海量bug中</p>
     </div>
 </div>
 </div>
@@ -278,7 +280,7 @@
       <span>
           <a
             href="{% url 'article:article_list' %}?tag={{ tag }}"
-            class="badge badge-light" 
+            class="badge badge-light mb-1" 
           >
             {{ tag }}
      
@@ -296,10 +298,6 @@
 
 
 </div>
-
-
-
-
 
   
 </aside>
