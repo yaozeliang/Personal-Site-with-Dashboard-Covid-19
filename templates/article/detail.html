@@ -49,8 +49,28 @@
         <!-- 文章正文 -->
         <div class="col-12">
             <p>{{ article.body|safe }}</p>
-        
 
+        </div>
+
+        <div class="row justify-content-end">
+            {% if next_article %}
+            <div class="col-auto mr-auto">
+                <a  href="{{ next_article.get_absolute_url }}" 
+                    class="btn btn-outline-dark"
+                    >
+                    <i class="fas fa-arrow-left"></i>&nbsp;上一篇
+                </a>
+            </div>
+            {% endif %}
+        {% if pre_article %}
+            <div class="col-auto">
+                <a  href="{{ pre_article.get_absolute_url }}" 
+                class="btn btn-outline-dark" 
+                >
+                下一篇&nbsp;<i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        {% endif %}
         </div>
 
 

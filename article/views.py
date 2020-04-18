@@ -19,58 +19,53 @@ from comment.models import Comment
 from comment.forms import CommentForm
 
 
+class ArticleListView(ListView):
+    model=ArticlePost
+    context_object_name = 'articles'
+    template_name = 'article/list.html'
 
-def article_list(request):
-    # 从 url 中提取查询参数
-    search = request.GET.get('search')
-    order = request.GET.get('order')
-    category = request.GET.get('category')
-    tag = request.GET.get('tag')
     categories = Category.objects.all()
     all_tags= ArticlePost.tags.all()
-    # 用户搜索逻辑
 
-    # 初始化查询集
-    article_list = ArticlePost.objects.all()
+    def get_queryset(self):
+        search =self.request.GET.get("search")   
+        order = self.request.GET.get("order")            
+        category = self.request.GET.get("category") 
+        tag = self.request.GET.get("tag")
+        article_list = ArticlePost.objects.all()
 
-    # 搜索查询集
-    if search:
-        article_list = article_list.filter(
-            Q(title__icontains=search) |
-            Q(body__icontains=search)
-        )
-    else:
-        search = ''
+        if search:
+            article_list = article_list.filter(
+                Q(title__icontains=search) |
+                Q(body__icontains=search)
+            )
+        else:
+            search = ''
 
-    # 栏目查询集
-    if category is not None and category.isdigit():
-        article_list = article_list.filter(category=category)
+        if category is not None and category.isdigit():
+            article_list = article_list.filter(category=category)
 
-    # 标签查询集
-    if tag and tag != 'None':
-        article_list = article_list.filter(tags__name__in=[tag])
+        
+        if tag and tag != 'None':
+            article_list = article_list.filter(tags__name__in=[tag])
 
-    # 查询集排序
-    if order=='total_views':
-        article_list = article_list.order_by('-total_views')
+        if order=='total_views':
+            article_list = article_list.order_by('-total_views')
 
-    paginator = Paginator(article_list, 4)
-    page = request.GET.get('page')
-    articles = paginator.get_page(page)
+        paginator = Paginator(article_list, 4)
+        page = self.request.GET.get('page')
+        articles = paginator.get_page(page)
+        return articles
 
-    # 需要传递给模板（templates）的对象
-    context = {
-        'articles': articles,
-        'order': order,
-        'search': search,
-        'category': category,
-        'tag': tag,
-        'categories':categories,
-        'all_tags':all_tags,
 
-    }
+    def get_context_data(self, **kwargs):
 
-    return render(request, 'article/list.html', context)
+        context = super().get_context_data(**kwargs)
+
+        context['categories'] = self.categories
+        context['all_tags'] = self.all_tags
+        return context
+
 
 
 
@@ -79,6 +74,23 @@ def article_detail(request, id):
     article = ArticlePost.objects.get(id=id)
     comments = Comment.objects.filter(article=id)
     comment_form = CommentForm()
+
+    # 过滤出所有的id比当前文章小的文章
+    pre_article = ArticlePost.objects.filter(id__lt=article.id).order_by('-id')
+    # 过滤出id大的文章
+    next_article = ArticlePost.objects.filter(id__gt=article.id).order_by('id')
+
+    # 取出相邻前一篇文章
+    if pre_article.count() > 0:
+        pre_article = pre_article[0]
+    else:
+        pre_article = None
+
+    # 取出相邻后一篇文章
+    if next_article.count() > 0:
+        next_article = next_article[0]
+    else:
+        next_article = None
 
     if request.user!= article.author:
         article.total_views += 1
@@ -96,8 +108,19 @@ def article_detail(request, id):
         ]
     )
     article.body = md.convert(article.body)
-    context = { 'article': article,'toc': md.toc,'comments': comments,'comment_form': comment_form}
+    context = { 'article': article,
+                'toc': md.toc,
+                'comments': comments,
+                'comment_form': comment_form,
+                'pre_article': pre_article,
+                'next_article': next_article}
     return render(request, 'article/detail.html', context)
+
+
+
+
+
+
 
 
 def article_create(request):
@@ -199,50 +222,3 @@ def article_safe_delete(request, id):
 #         return super().form_valid(form)
 
 
-class ArticleListView(ListView):
-    model=ArticlePost
-    context_object_name = 'articles'
-    template_name = 'article/list.html'
-
-    def get_queryset(self):
-        """
-        查询集
-        """
-        search =self.request.GET.get("search")   
-        order = self.request.GET.get("order")            
-        category = self.request.GET.get("category") 
-        tag = self.request.GET.get("tag")
-        article_list = ArticlePost.objects.all()
-    
-        if search:
-            article_list = article_list.filter(
-                Q(title__icontains=search) |
-                Q(body__icontains=search)
-            )
-        else:
-            search = ''
-
-        if category is not None and category.isdigit():
-            article_list = article_list.filter(category=category)
-
-        
-        if tag and tag != 'None':
-            article_list = article_list.filter(tags__name__in=[tag])
-
-        if order=='total_views':
-            article_list = article_list.order_by('-total_views')
-
-        paginator = Paginator(article_list, 4)
-        page = self.request.GET.get('page')
-        articles = paginator.get_page(page)
-        return articles
-
-
-    def get_context_data(self, **kwargs):
-
-        context = super().get_context_data(**kwargs)
-        categories = Category.objects.all()
-        all_tags= ArticlePost.tags.all()
-        context['categories'] = categories
-        context['all_tags'] = all_tags
-        return context
