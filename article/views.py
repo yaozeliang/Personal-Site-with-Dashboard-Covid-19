@@ -1,7 +1,7 @@
 from django.shortcuts import render,get_object_or_404,redirect
 from django.views.decorators.csrf import csrf_protect
-from django.views.generic import ListView
-from django.views.generic.edit import CreateView
+from django.views.generic import ListView,DetailView,DeleteView
+from django.views.generic.edit import CreateView,UpdateView
 from django.core.paginator import Paginator
 # 引入 Q 对象
 from django.db.models import Q
@@ -66,6 +66,58 @@ class ArticleListView(ListView):
         context['all_tags'] = self.all_tags
         return context
 
+
+
+class ArticleDetailView(DetailView):
+    model=ArticlePost
+    context_object_name = 'article'
+    template_name = 'article/detail.html'
+
+    md = markdown.Markdown(extensions=[
+        'markdown.extensions.extra',
+        'markdown.extensions.codehilite',
+        'markdown.extensions.toc',
+        'markdown.extensions.tables',
+        ])
+
+    comment_form = CommentForm()
+
+    def get_object(self):
+        obj = super(ArticleDetailView, self).get_object()
+        # if request.user!= article.author:
+        #     article.total_views += 1
+        #     article.save(update_fields=['total_views'])
+        obj.total_views += 1
+        obj.save(update_fields=['total_views'])
+        obj.body= self.md.convert(obj.body)
+        return obj
+
+    
+
+    def get_context_data(self, **kwargs):
+
+        context = super().get_context_data(**kwargs)
+        pre_article = self.model.objects.filter(id__lt=self.kwargs['pk']).order_by('-id')
+        next_article = self.model.objects.filter(id__gt=self.kwargs['pk']).order_by('id')
+        if pre_article.count() > 0:
+            pre_article = pre_article[0]
+        else:
+            pre_article = None
+
+        if next_article.count() > 0:
+            next_article = next_article[0]
+        else:
+            next_article = None
+
+        comments = Comment.objects.filter(article=self.kwargs['pk'])
+        
+
+        context['toc'] = self.md.toc
+        context['comments'] = comments
+        context['comment_form'] = self.comment_form
+        context['pre_article'] = pre_article
+        context['next_article'] = next_article
+        return context
 
 
 
