@@ -1,5 +1,6 @@
 from django.shortcuts import render,get_object_or_404,redirect
 from django.views.decorators.csrf import csrf_protect
+from django.views.generic import ListView
 from django.views.generic.edit import CreateView
 from django.core.paginator import Paginator
 # 引入 Q 对象
@@ -196,3 +197,52 @@ def article_safe_delete(request, id):
 #     def form_valid(self, form): # new
 #         form.instance.author = self.request.user
 #         return super().form_valid(form)
+
+
+class ArticleListView(ListView):
+    model=ArticlePost
+    context_object_name = 'articles'
+    template_name = 'article/list.html'
+
+    def get_queryset(self):
+        """
+        查询集
+        """
+        search =self.request.GET.get("search")   
+        order = self.request.GET.get("order")            
+        category = self.request.GET.get("category") 
+        tag = self.request.GET.get("tag")
+        article_list = ArticlePost.objects.all()
+    
+        if search:
+            article_list = article_list.filter(
+                Q(title__icontains=search) |
+                Q(body__icontains=search)
+            )
+        else:
+            search = ''
+
+        if category is not None and category.isdigit():
+            article_list = article_list.filter(category=category)
+
+        
+        if tag and tag != 'None':
+            article_list = article_list.filter(tags__name__in=[tag])
+
+        if order=='total_views':
+            article_list = article_list.order_by('-total_views')
+
+        paginator = Paginator(article_list, 4)
+        page = self.request.GET.get('page')
+        articles = paginator.get_page(page)
+        return articles
+
+
+    def get_context_data(self, **kwargs):
+
+        context = super().get_context_data(**kwargs)
+        categories = Category.objects.all()
+        all_tags= ArticlePost.tags.all()
+        context['categories'] = categories
+        context['all_tags'] = all_tags
+        return context
