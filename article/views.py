@@ -1,4 +1,5 @@
 from django.shortcuts import render,get_object_or_404,redirect
+from  django.urls import  reverse_lazy
 from django.views.decorators.csrf import csrf_protect
 from django.views.generic import ListView,DetailView,DeleteView
 from django.views.generic.edit import CreateView,UpdateView
@@ -92,8 +93,6 @@ class ArticleDetailView(DetailView):
         obj.body= self.md.convert(obj.body)
         return obj
 
-    
-
     def get_context_data(self, **kwargs):
 
         context = super().get_context_data(**kwargs)
@@ -118,61 +117,6 @@ class ArticleDetailView(DetailView):
         context['pre_article'] = pre_article
         context['next_article'] = next_article
         return context
-
-
-
-@csrf_protect
-def article_detail(request, id):
-    article = ArticlePost.objects.get(id=id)
-    comments = Comment.objects.filter(article=id)
-    comment_form = CommentForm()
-
-    # 过滤出所有的id比当前文章小的文章
-    pre_article = ArticlePost.objects.filter(id__lt=article.id).order_by('-id')
-    # 过滤出id大的文章
-    next_article = ArticlePost.objects.filter(id__gt=article.id).order_by('id')
-
-    # 取出相邻前一篇文章
-    if pre_article.count() > 0:
-        pre_article = pre_article[0]
-    else:
-        pre_article = None
-
-    # 取出相邻后一篇文章
-    if next_article.count() > 0:
-        next_article = next_article[0]
-    else:
-        next_article = None
-
-    if request.user!= article.author:
-        article.total_views += 1
-        article.save(update_fields=['total_views'])
-
-
-    # 将markdown语法渲染成html样式
-
-    md = markdown.Markdown(
-        extensions=[
-        'markdown.extensions.extra',
-        'markdown.extensions.codehilite',
-        'markdown.extensions.toc',
-        'markdown.extensions.tables',
-        ]
-    )
-    article.body = md.convert(article.body)
-    context = { 'article': article,
-                'toc': md.toc,
-                'comments': comments,
-                'comment_form': comment_form,
-                'pre_article': pre_article,
-                'next_article': next_article}
-    return render(request, 'article/detail.html', context)
-
-
-
-
-
-
 
 
 def article_create(request):
@@ -203,6 +147,46 @@ def article_create(request):
         context = { 'article_post_form': article_post_form, 'categorys': categorys }
 
         return render(request, 'article/create.html', context)
+
+
+class ArticleCreateView(CreateView):
+    model = ArticlePost
+    # fields = ['title','avatar','category','tags','body']
+    form_class=ArticlePostForm
+    template_name = 'article/create_crispy.html'
+
+ 
+    def get_initial(self, *args, **kwargs):
+        initial = super(ArticleCreateView, self).get_initial(**kwargs)
+        initial['title']='Write Title here'
+        return initial
+
+
+    def form_valid(self, form):
+        new_article = form.save(commit=False)
+        new_article.author = self.request.user
+        new_article.save()
+        form.save_m2m()
+        return super().form_valid(form)
+        
+    #     return redirect("article:article_list")
+
+    #     self.object = form.save(commit=False)
+    #     self.object.user = self.request.user
+    #     self.object.save()
+    #     return redirect("article:article_list")
+
+
+    # def get_form_kwargs(self, *args, **kwargs):
+    #     kwargs = super(ArticleCreateView, self).get_form_kwargs(*args, **kwargs)
+    #     kwargs['author'] = self.request.user
+    #     return kwargs
+
+
+
+
+
+
 
 
 @login_required(login_url='/userprofile/login/')

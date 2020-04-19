@@ -11,7 +11,7 @@
         <div class="col-12">
             <br>
             <!-- 提交文章的表单 -->
-            <form method="post">
+            <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ form|crispy }}
                 <button type="submit" class="btn btn-primary">完成</button>

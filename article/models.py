@@ -63,6 +63,9 @@ class ArticlePost(models.Model):
     def get_absolute_url(self): 
         return reverse('article:article_detail', args=[str(self.id)])
 
+    # def get_absolute_url(self):
+    #     return reverse('article:article_detail', kwargs={'pk': self.pk})
+
     
 
 
