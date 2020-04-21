@@ -1,0 +1,28 @@
+<!-- 写入 base.html 中定义的 title -->
+{% extends "base.html" %} 
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %} 编辑文章 {% endblock title %}
+
+{% block content %}
+<!-- 写文章表单 -->
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <br>
+            <!-- 提交文章的表单 -->
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                {{ form|crispy }}
+
+
+                <button type="submit" class="btn btn-primary">编辑完成</button>
+            </form>
+
+            
+            
+        </div>
+    </div>
+</div>
+{% endblock content %}

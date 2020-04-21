@@ -154,7 +154,7 @@
 <form 
       style="display:none;" 
       id="safe_delete"
-      action="{% url 'article:article_safe_delete' article.id %}" 
+      action="{% url 'article:article_safe_delete' article.pk %}" 
       method="POST">
     {% csrf_token %}
     <button type="submit">发送</button>

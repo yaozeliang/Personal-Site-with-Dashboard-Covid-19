@@ -20,6 +20,10 @@ from comment.models import Comment
 from comment.forms import CommentForm
 
 
+from django.core.exceptions import PermissionDenied # new
+from django.contrib.auth.mixins import LoginRequiredMixin 
+
+
 class ArticleListView(ListView):
     model=ArticlePost
     context_object_name = 'articles'
@@ -62,7 +66,6 @@ class ArticleListView(ListView):
     def get_context_data(self, **kwargs):
 
         context = super().get_context_data(**kwargs)
-
         context['categories'] = self.categories
         context['all_tags'] = self.all_tags
         return context
@@ -119,46 +122,20 @@ class ArticleDetailView(DetailView):
         return context
 
 
-def article_create(request):
-    # 判断用户是否提交数据
-    if request.method == "POST":
-        # 将提交的数据赋值到表单实例中
-        article_post_form = ArticlePostForm(request.POST,request.FILES)
-        # 判断提交的数据是否满足模型的要求
-        if article_post_form.is_valid():
-            # 保存数据，但暂时不提交到数据库中
-            new_article = article_post_form.save(commit=False)
-            new_article.author = User.objects.get(id=request.user.id)
-            if request.POST['category'] != 'none':
-                new_article.category = Category.objects.get(id=request.POST['category'])
-            new_article.save()
-            # 新增代码，保存 tags 的多对多关系
-            article_post_form.save_m2m()
-            
-            return redirect("article:article_list")
-        # 如果数据不合法，返回错误信息
-        else:
-            return HttpResponse("表单内容有误，请重新填写。")
-    # 如果用户请求获取数据
-    else:
-        # 创建表单类实例
-        article_post_form = ArticlePostForm()
-        categorys = Category.objects.all()
-        context = { 'article_post_form': article_post_form, 'categorys': categorys }
-
-        return render(request, 'article/create.html', context)
 
 
-class ArticleCreateView(CreateView):
+
+class ArticleCreateView(LoginRequiredMixin,CreateView):
     model = ArticlePost
     # fields = ['title','avatar','category','tags','body']
+    login_url = 'login'
     form_class=ArticlePostForm
     template_name = 'article/create_crispy.html'
 
  
     def get_initial(self, *args, **kwargs):
         initial = super(ArticleCreateView, self).get_initial(**kwargs)
-        initial['title']='Write Title here'
+        initial['title']='Your Title'
         return initial
 
 
@@ -169,18 +146,36 @@ class ArticleCreateView(CreateView):
         form.save_m2m()
         return super().form_valid(form)
         
-    #     return redirect("article:article_list")
-
-    #     self.object = form.save(commit=False)
-    #     self.object.user = self.request.user
-    #     self.object.save()
-    #     return redirect("article:article_list")
 
 
-    # def get_form_kwargs(self, *args, **kwargs):
-    #     kwargs = super(ArticleCreateView, self).get_form_kwargs(*args, **kwargs)
-    #     kwargs['author'] = self.request.user
-    #     return kwargs
+# @login_required(login_url='/userprofile/login/')
+class ArticleUpdateView(LoginRequiredMixin,UpdateView):
+    model = ArticlePost
+    login_url = 'login'
+    # fields = ['title','avatar','category','tags','body']
+    form_class=ArticlePostForm
+    template_name = 'article/update_crispy.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        obj = self.get_object()
+        if obj.author != self.request.user:
+            return HttpResponse("Sorry, you don't have right to update")
+            # raise PermissionDenied
+        return super().dispatch(request, *args, **kwargs)
+        
+
+class ArticleDeleteView(LoginRequiredMixin,DeleteView):
+    model = ArticlePost
+    login_url = 'login'
+    template_name = 'article/detail.html'
+    success_url = reverse_lazy("article:article_list")
+
+    def dispatch(self, request, *args, **kwargs):
+        obj = self.get_object()
+        if obj.author != self.request.user:
+            return HttpResponse("Sorry, you don't have right to update")
+            # raise PermissionDenied
+        return super().dispatch(request, *args, **kwargs)
 
 
 
@@ -188,63 +183,6 @@ class ArticleCreateView(CreateView):
 
 
 
-
-@login_required(login_url='/userprofile/login/')
-def article_update(request, id):
-
-    article = ArticlePost.objects.get(id=id)
-
-    if request.user!= article.author:
-        return HttpResponse("抱歉，你无权修改这篇文章。")
-
-    if request.method == "POST":
-        article_post_form = ArticlePostForm(request.POST,request.FILES)
-
-        if article_post_form.is_valid():
-            if request.POST['category']!='none':
-                article.category = Category.objects.get(id=request.POST['category'])
-            else:
-                article.category = None
-
-
-            if request.FILES.get('avatar'):
-                article.avatar = request.FILES.get('avatar')
-
-            article.title = request.POST['title']
-            article.body = request.POST['body']
-
-            article.tags.set(*request.POST.get('tags').split(','), clear=True)
-            article.save()
-
-            return redirect("article:article_detail", id=id)
-        else:
-            return HttpResponse("表单内容有误，请重新填写。")
-
-    # 如果用户 GET 请求获取数据
-    else:
-        categorys = Category.objects.all()
-        context = { 
-            'article': article, 
-            'categorys': categorys,
-            'tags': ','.join([x for x in article.tags.names()]),
-        }
-        # 将响应返回到模板中
-        return render(request, 'article/update.html', context)
-
-
-@csrf_protect
-@login_required(login_url='/userprofile/login/')
-def article_safe_delete(request, id):
-    if request.method == 'POST':
-        article = ArticlePost.objects.get(id=id)
-
-        if request.user!= article.author:
-            return HttpResponse("对不起，你无权修改这篇文章。")
-        else:
-            article.delete()
-            return redirect("article:article_list")
-    else:
-        return HttpResponse("仅允许post请求")
 
 
 

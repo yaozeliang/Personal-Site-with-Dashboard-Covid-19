@@ -123,11 +123,6 @@ def article_detail(request, id):
 
 
 
-
-
-
-
-
 def article_create(request):
     # 判断用户是否提交数据
     if request.method == "POST":
@@ -156,3 +151,60 @@ def article_create(request):
         context = { 'article_post_form': article_post_form, 'categorys': categorys }
 
         return render(request, 'article/create.html', context)
+
+@login_required(login_url='/userprofile/login/')
+def article_update(request, id):
+
+    article = ArticlePost.objects.get(id=id)
+
+    if request.user!= article.author:
+        return HttpResponse("抱歉，你无权修改这篇文章。")
+
+    if request.method == "POST":
+        article_post_form = ArticlePostForm(request.POST,request.FILES)
+
+        if article_post_form.is_valid():
+            if request.POST['category']!='none':
+                article.category = Category.objects.get(id=request.POST['category'])
+            else:
+                article.category = None
+
+
+            if request.FILES.get('avatar'):
+                article.avatar = request.FILES.get('avatar')
+
+            article.title = request.POST['title']
+            article.body = request.POST['body']
+
+            article.tags.set(*request.POST.get('tags').split(','), clear=True)
+            article.save()
+
+            return redirect("article:article_detail", id=id)
+        else:
+            return HttpResponse("表单内容有误，请重新填写。")
+
+    # 如果用户 GET 请求获取数据
+    else:
+        categorys = Category.objects.all()
+        context = { 
+            'article': article, 
+            'categorys': categorys,
+            'tags': ','.join([x for x in article.tags.names()]),
+        }
+        # 将响应返回到模板中
+        return render(request, 'article/update.html', context)
+
+
+@csrf_protect
+@login_required(login_url='/userprofile/login/')
+def article_safe_delete(request, id):
+    if request.method == 'POST':
+        article = ArticlePost.objects.get(id=id)
+
+        if request.user!= article.author:
+            return HttpResponse("对不起，你无权修改这篇文章。")
+        else:
+            article.delete()
+            return redirect("article:article_list")
+    else:
+        return HttpResponse("仅允许post请求")
