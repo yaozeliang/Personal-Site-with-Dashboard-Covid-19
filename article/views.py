@@ -29,8 +29,8 @@ class ArticleListView(ListView):
     context_object_name = 'articles'
     template_name = 'article/list.html'
 
-    categories = Category.objects.all()
-    all_tags= ArticlePost.tags.all()
+    # categories = Category.objects.all()
+    # all_tags= ArticlePost.tags.all()
 
     def get_queryset(self):
         search =self.request.GET.get("search")   
@@ -66,8 +66,8 @@ class ArticleListView(ListView):
     def get_context_data(self, **kwargs):
 
         context = super().get_context_data(**kwargs)
-        context['categories'] = self.categories
-        context['all_tags'] = self.all_tags
+        # context['categories'] = self.categories
+        # context['all_tags'] = self.all_tags
         return context
 
 
@@ -181,18 +181,19 @@ class ArticleDeleteView(LoginRequiredMixin,DeleteView):
 
 
 
+class ArchiveView(ListView):
+    model = ArticlePost
+    template_name = 'article/list.html'
+    context_object_name = 'articles'
 
+    def get_queryset(self):
+        year = self.kwargs.get("year")
+        month = self.kwargs.get("month")
+        return (
+            super()
+            .get_queryset()
+            .filter(created__year=year, created__month=month)
+        )
 
-
-
-
-# class ArticleCreateView(CreateView): # new
-#     model = ArticlePost
-#     template_name = 'article/create_crispy.html'
-#     fields = ['title','body']
-
-#     def form_valid(self, form): # new
-#         form.instance.author = self.request.user
-#         return super().form_valid(form)
-
+    
 

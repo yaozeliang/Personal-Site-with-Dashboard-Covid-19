@@ -1,0 +1,44 @@
+<div class="row cat-tags">
+  <div class="card col-10 ml-md-2 mb-2">
+    <div class="card-body">
+      <p class="card-title">
+        <span
+          ><i class="fas fa-code-branch" style="color: palevioletred;"></i
+        ></span>
+        Category
+      </p>
+
+      <div class="row mb-1">
+        {% for cat in cat_list %}
+        <div class="col-auto mb-2">
+          <a
+            href="{% url 'article:article_list' %}?category={{ cat.id }}"
+            class="btn btn-outline-dark btn-sm p-1"
+            >{{ cat.name }}</a
+          >
+        </div>
+
+        {% endfor %}
+      </div>
+
+      <p class="card-title">
+        <span><i class="fas fa-tags" style="color: mediumslateblue;"></i></span>
+        Tags
+      </p>
+
+      <h6>
+        {% for tag in tag_list %}
+        <span>
+          <a
+            href="{% url 'article:article_list' %}?tag={{ tag }}"
+            class="badge badge-light mb-1"
+          >
+            {{ tag }}
+          </a></span
+        >
+
+        {% endfor %}
+      </h6>
+    </div>
+  </div>
+</div>

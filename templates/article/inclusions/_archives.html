@@ -1,0 +1,23 @@
+<div class="row archive-articles">
+  <div class="row card col-10 ml-2 mb-2">
+    <div class="card-body">
+      <h6><i class="fas fa-calendar-alt" style="color: sandybrown;"></i>
+        Archive
+      </h6>
+
+      <div class="row">
+      {% for date in date_list %}
+      <div class="col-auto mb-1">
+        <a
+        href=""
+        class="btn btn-outline-dark btn-sm p-1 ">{{ date.year }}/{{ date.month }}</a>
+    </div>
+
+      </div>
+    {% empty %}
+    <p>No Archive</p>
+    {% endfor %}
+    </div>
+  </div>
+</div>
+
