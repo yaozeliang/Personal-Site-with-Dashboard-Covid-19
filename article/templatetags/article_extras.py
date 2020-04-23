@@ -18,3 +18,13 @@ def show_cats_tags(context):
         'tag_list': ArticlePost.tags.all(),
         'cat_list':Category.objects.all()
     }
+
+
+@register.inclusion_tag('article/inclusions/_resume.html')
+def show_resume():
+    return {}
+
+
+@register.inclusion_tag('article/inclusions/_notification.html')
+def show_notification():
+    return {}

@@ -43,6 +43,12 @@ INSTALLED_APPS = [
     'taggit',
     'imagekit',
     'ckeditor',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    # 可添加需要的第三方登录
+    'allauth.socialaccount.providers.github',
+    'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -51,6 +57,15 @@ INSTALLED_APPS = [
     # 'whitenoise.runserver_nostatic',  # new!
     'django.contrib.staticfiles',
 ]
+
+
+# 设置站点
+SITE_ID = 1
+
+# 登录成功后重定向地址
+LOGIN_REDIRECT_URL = '/'
+
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -63,6 +78,11 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+
+
+
+
+
 ROOT_URLCONF = 'my_blog.urls'
 
 TEMPLATES = [
@@ -72,6 +92,7 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                 # allauth 启动必须项
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
@@ -112,6 +133,18 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+
+AUTHENTICATION_BACKENDS = (
+    # Django 后台可独立于 allauth 登录
+    'django.contrib.auth.backends.ModelBackend',
+
+    # 配置 allauth 独有的认证方法，如 email 登录
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+
+
+
 
 
 # Internationalization
