@@ -1,4 +1,4 @@
-<div class="row notification">
+<!-- <div class="row notification">
   <div class="card col-10 ml-md-2 mb-3">
     <div class="card-body">
       <p class="card-text">
@@ -6,4 +6,46 @@
       </p>
     </div>
   </div>
+</div> -->
+
+<div class="row">
+<article class="media col-10 ml-md-2 mb-3 ">
+  <div class="media-left">
+      <figure class="image is-60x60">
+          <img src="http://openweathermap.org/img/w/{{ paris_weather.icon }}.png" alt="Image">
+      </figure>
+  </div>
+  <div class="media-content">
+      <div class="content">
+          <p>
+              <span class="title">{{ paris_weather.city }}, {{ paris_weather.country }}</span>
+              <br>
+              <span class="subtitle">{{ paris_weather.temperature }} °c, {{ paris_weather.description }}</span>
+          </p>
+      </div>
+  </div>
+
+</article>
 </div>
+<!-- <div class="row">
+  <div class="col-10 ml-md-2 mb-1">
+      <div class="media">
+        <div class="media-left">
+          <figure class="image is-80x80">
+            <img
+              src="http://openweathermap.org/img/w/{{ paris_weather.icon }}.png"
+              alt="Image"
+            />
+          </figure>
+        </div>
+
+        <div class="media-body">
+          <p>
+            {{ paris_weather.temperature }} °C, {{ paris_weather.city }}
+          </p>        
+          <p>Today: {{ paris_weather.description }}</p>
+        </div>
+      </div>
+  </div>
+</div> -->
+

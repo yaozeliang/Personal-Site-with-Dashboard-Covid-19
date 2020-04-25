@@ -1,26 +1,31 @@
 <!-- 引入notifications的模板标签 -->
 {% load notifications_tags %}
 {% notifications_unread as unread_count %}
-
+{% load static %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container">
     <!-- 导航栏商标 -->
-    <a class="navbar-brand" href="#">YAO Zeliang</a>
+    <!-- <a class="navbar-brand" href="#"></a> -->
+    
+    <a class="navbar-brand" href="#">
+      <span><img src="{% static 'images/self.jpg' %}" width="30" height="30" class="d-inline-block align-top"> 
+        YAO Zeliang</span>
+    </a>
 
     <!-- 导航入口 -->
     <div>
       <ul class="navbar-nav">
         <!-- 条目 -->
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'article:article_list' %}">文章</a>
+        <li class="nav-item ">
+          <a class="nav-link " href="{% url 'article:article_list' %}">文章</a>
         </li>
 
-        <!-- <li class="nav-item"></li>
-          <a class="nav-link" href="{% url 'article:article_create' %}">写文章</a>
-          </li> -->
+
 
         {% if user.is_authenticated %}
         <!-- 如果用户已经登录，则显示用户名下拉框 -->
+         <!-- <li class="nav-item"><img src="User.socialaccount_set.all.0.get_avatar_url" alt=""></li> -->
+
         <li class="nav-item dropdown">
           <a
             class="nav-link dropdown-toggle"
@@ -46,9 +51,13 @@
               <span class="badge badge-danger">{{ unread_count }}</span>
               {% endif %}
            </a>
-            <a class="dropdown-item" href='{% url "userprofile:edit" user.id %}'>个人信息</a>
+            <!-- <a class="dropdown-item" href='{% url "userprofile:edit" user.id %}'>个人信息</a> -->
+
+            {% if user.is_superuser %}
             <a class="dropdown-item" href="{% url 'article:article_create' %}"
               >写文章</a>
+            {% endif %}
+            
             <a class="dropdown-item" href="#" onclick="user_delete()">删除用户</a>
             <a class="dropdown-item" href='{% url "userprofile:logout" %}'>退出登录</a>
           </div>

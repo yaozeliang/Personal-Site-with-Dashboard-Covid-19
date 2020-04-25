@@ -135,13 +135,13 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-AUTHENTICATION_BACKENDS = (
-    # Django 后台可独立于 allauth 登录
-    'django.contrib.auth.backends.ModelBackend',
+# AUTHENTICATION_BACKENDS = (
+#     # Django 后台可独立于 allauth 登录
+#     'django.contrib.auth.backends.ModelBackend',
 
-    # 配置 allauth 独有的认证方法，如 email 登录
-    'allauth.account.auth_backends.AuthenticationBackend',
-)
+#     # 配置 allauth 独有的认证方法，如 email 登录
+#     'allauth.account.auth_backends.AuthenticationBackend',
+# )
 
 
 

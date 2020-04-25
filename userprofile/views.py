@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .forms import UserLoginForm,UserRegisterForm
+from django.views.generic.edit import CreateView,UpdateView
+from django.urls import reverse_lazy
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-
+from django.views.generic.base import View
 from .forms import ProfileForm
 from .models import Profile
 
@@ -56,6 +58,23 @@ def user_register(request):
         return render(request, 'userprofile/register.html')
     else:
         return HttpResponse("请使用GET或POST请求数据")
+
+
+class RegisterView(CreateView):
+    form_class = UserRegisterForm
+    template_name = 'userprofile/register.html'
+
+    def form_valid(self, form):
+        new_user = form.save(commit=False)
+        new_user.set_password(form.cleaned_data['password'])
+        new_user.save()
+        login(self.request, new_user)
+        return redirect("article:article_list")
+
+    def form_invalid(self, form):
+        return HttpResponse("注册表单输入有误。请重新输入~")
+
+
 
 
 @login_required(login_url='/userprofile/login/')

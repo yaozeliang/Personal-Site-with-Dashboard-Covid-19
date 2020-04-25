@@ -30,6 +30,7 @@ sqlparse = "==0.3.1"
 swapper = "==1.1.2.post1"
 whitenoise = "==3.3.1"
 django-allauth = "*"
+pandas = "==0.24.1"
 
 [requires]
 python_version = "3.8"

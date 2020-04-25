@@ -163,7 +163,8 @@
       </span>
       <span>
         <i class="fas fa-calendar-alt" style="color:coral"></i>
-          {{ article.created|date:'Y-m-d' }}
+          <!-- {{ article.created|date:'Y-m-d' }} -->
+          {{ article.created|timesince_zh }}
       </span>
       </p>
     </div>
