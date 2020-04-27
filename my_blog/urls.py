@@ -19,6 +19,7 @@ urlpatterns = [
     path('inbox/notifications/', include(notifications.urls, namespace='notifications')),
     path('notice/', include('notice.urls')),
     path('accounts/', include('allauth.urls')),
+    path('api/',include("api.urls")),
 ]
 
 

@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     # 可添加需要的第三方登录
     'allauth.socialaccount.providers.github',
+    'rest_framework',
     'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.auth',
