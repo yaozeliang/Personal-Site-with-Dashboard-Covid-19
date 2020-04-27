@@ -11,5 +11,3 @@ urlpatterns = [
 	path('article-update/<str:pk>/', views.articleUpdate, name="api_article_update"),
 	path('article-delete/<str:pk>/', views.articleDelete, name="api_article_delete"),	
 ]
-
-
