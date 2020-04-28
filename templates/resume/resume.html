@@ -1,0 +1,309 @@
+{% extends "base.html" %} 
+
+{% load static %} 
+
+
+{%block extra_css%}
+<link rel="stylesheet" href="{% static 'layui/css/layui.css' %}">
+{%endblock extra_css%}
+
+{% block title %}
+简历
+{% endblock title %}
+
+{% block content %}
+
+<div class="layui-container layui-anim layui-anim-scale">
+
+
+<div class="layui-row personal-expections mt-3 ">
+        <div class="layui-col-md3">
+          <div class="layui-elem-quote"><p><i class="fas fa-address-card" style="color:dodgerblue"></i> Basic Info</p></div>
+      
+          <div class="layui-row">
+            <div class="layui-col-md5 photo">
+              <div class="layui-inline">
+                <img
+                  class="layui-circle" width="100" height="100"
+                  src="{% static 'images/self.jpg' %}"/>
+              </div>
+            </div>
+      
+            <div
+              class="layui-col-md6 introduction"
+              style="box-shadow: 0 1px 2px 0 #33333370;border-color: black">
+              <div
+                class="layui-card "
+                style="border-bottom: 1px solid">
+                <div
+                  class="layui-card-header">
+                  YAO ZELIANG
+                </div>
+      
+                <div class="layui-card-body">
+                    Age：26<br/>
+                    Paris,France<br/>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      
+        <div class="layui-col-md5">
+          <div class="expections">
+            <div class="layui-elem-quote">
+              <p> <i class="fas fa-heart" style="color: red;"></i> About Me</p>
+            </div>
+      
+            <div class="layui-card">
+              <div class="layui-card-header">Python / Data Developer</div>
+      
+              <div class="layui-card-body">
+                <p>Graduated from <a href="https://www.efrei.fr/"> EFREI </a> and <a href="https://en.wikipedia.org/wiki/Beijing_University_of_Technology"> BJUT </a>
+                ,majored in Business Intelligence, I got my Master degree in 2018, Currently I'm working as a software developer at Axa</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="layui-col-md4">
+            <div class="contact">
+              <div class="layui-elem-quote"><p><i class="fas fa-at"></i>&nbsp;Contact</p></div>
+        
+              <div class="layui-card">
+        
+                <div class="layui-card-body">
+                    <p> <i class="fab fa-linkedin" style="color: royalblue;"></i>&nbsp;<i class="fas fa-hand-point-right"></i>
+                        <a href="https://www.linkedin.com/in/zeliang-yao-359183114/">&nbsp;Zeliang YAO</a></p>
+                  <span><i class="fab fa-weixin" style="color: yellowgreen"></i>&nbsp;alpha94511</span>
+                  <br/>
+                  <span><i class="fas fa-envelope"></i>&nbsp;zeliang.yao@efrei.net</span>
+                  <br/>
+                  <span><i class="fab fa-github" style="color:steelblue"></i>&nbsp;yaozeliang</span>
+                </div>
+              </div>
+            </div>
+        </div>
+</div>
+
+
+
+<div class="layui-row experience">
+    <div class="layui-col-md8">
+      <div class="work_experience">
+        <div class="layui-elem-quote"><p><i class="fas fa-suitcase"></i>&nbsp;Experience</p></div>
+  
+        <ul class="layui-timeline">
+          <li class="layui-timeline-item">
+            <i class="layui-icon layui-timeline-axis"></i>
+  
+            <div class="layui-timeline-content layui-text">
+              <h4>Axa Group Operations <span class="layui-badge layui-bg-green">&nbsp;Information Security</span></h4>
+  
+              <p class="layui-timeline-title">2020.01.06 - current Paris</p>
+  
+              <ul>
+                <li>Worked closely with the Security function to meet the audit requirements and implement solutions.</li>
+  
+                <li>
+                  Created automation scripts in Python for tool administration and security check
+  
+                  <span class="layui-badge layui-bg-blue">
+                    <i class="fab fa-python"></i>
+  
+                    Pandas Numpy Qualys
+                  </span>
+                </li>
+                <li>Analyzed,visualized data to meet other needs
+                </li>
+
+              </ul>
+            </div>
+          </li>
+  
+          <li class="layui-timeline-item">
+            <i class="layui-icon layui-timeline-axis"></i>
+  
+            <div class="layui-timeline-content layui-text">
+              <h4>
+               Société générale 
+                <span class="layui-badge layui-bg-green">Data Analyst / Support Risk Control</span>
+              </h4>
+  
+              <p class="layui-timeline-title">2018.11 - 2020.1 Paris</p>
+  
+              <ul>
+                <li>Duty: Third-party data quality monitoring
+                </li>
+                <li>Analyzed the third-party data, generated data models and visualize dynamic reports according to specific needs.</li>
+                <li>
+                  <span><i class="fas fa-database"></i></span>
+                  Environment: SharePoint,Oracle,D3.js,PowerBI,Python
+                </li>
+              </ul>
+            </div>
+          </li>
+  
+          <li class="layui-timeline-item">
+            <i class="layui-icon layui-timeline-axis"></i>
+  
+            <div class="layui-timeline-content layui-text">
+              <h4 class="layui-timeline-title">
+                Efrei - École Ingénieurs Informatique
+                <span class="layui-badge layui-bg-green">Master</span>
+              </h4>
+              <p>2016-2018 Paris</p>
+            </div>
+          </li>
+  
+          <li class="layui-timeline-item">
+            <i class="layui-icon layui-timeline-axis"></i>
+  
+            <div class="layui-timeline-content layui-text">
+              <h4 class="layui-timeline-title">
+                Beijing University of Technology
+  
+                <span class="layui-badge layui-bg-green">Bachelor</span>
+                
+              </h4>
+
+              <p>2012-2016 Beijing</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  
+    <div class="layui-col-md4 ">
+      <div class="skills">
+        <div class="layui-elem-quote"><p><i class="fas fa-cog"></i>&nbsp;Skills</p></div>
+        
+
+        <div class="layui-collapse mb-2" lay-filter="test">
+            <div class="layui-colla-item"> 
+              <h2 class="layui-colla-title">Web Development</h2>
+              <div class="layui-colla-content layui-show" >
+                H5,Css3,JS
+                <div class="layui-progress">
+                  <div class="layui-progress-bar" lay-percent="65%"></div>
+                </div>
+                <hr>
+                BootStrap4,Django
+                <div class="layui-progress">
+                  <div class="layui-progress-bar layui-bg-orange" lay-percent="85%"></div>
+                </div>
+              
+              </div>
+            </div>
+            <div class="layui-colla-item" >
+              <h2 class="layui-colla-title">Data </h2>
+              <div class="layui-colla-content layui-show">
+                MySql,SQL
+                <div class="layui-progress">
+                  <div class="layui-progress-bar layui-bg-blue" lay-percent="65%"></div>
+                </div>
+                <hr>
+                Python
+                <div class="layui-progress">
+                  <div class="layui-progress-bar layui-bg-red" lay-percent="85%"></div>
+                </div>
+                <hr>
+                PowerBI,PowerApps
+                <div class="layui-progress">
+                  <div class="layui-progress-bar layui-bg-cyan" lay-percent="80%"></div>
+                </div>
+              
+              </div>
+              </div>
+            <div class="layui-colla-item">
+              <h2 class="layui-colla-title">Others</h2>
+              <div class="layui-colla-content">Git,Heroku,Linux</div>
+            </div>
+        </div>
+
+      </div>
+  
+  
+      <div class="language">
+        <div class="layui-elem-quote"><p><i class="fas fa-language"></i>&nbsp;Language</p></div>
+  
+        <div class="layui-row">
+          <div class="layui-col-md12">
+            <p>
+              <span>
+                English:
+                <i class="layui-icon layui-icon-rate-solid"></i>
+                <i class="layui-icon layui-icon-rate-solid"></i>
+                <i class="layui-icon layui-icon-rate-solid"></i>
+                <i class="layui-icon layui-icon-rate-half"></i>
+                <i class="layui-icon layui-icon-rate"></i>
+              </span>
+            </p>
+          </div>
+  
+          <div class="layui-col-md12">
+            <p>
+              <span>
+                French:
+                <i class="layui-icon layui-icon-rate-solid"></i>
+                <i class="layui-icon layui-icon-rate-solid"></i>
+                <i class="layui-icon layui-icon-rate-solid"></i>
+                <i class="layui-icon layui-icon-rate-solid"></i>
+                <i class="layui-icon layui-icon-rate-half"></i>
+              </span>
+            </p>
+          </div>
+
+          <div class="layui-col-md12">
+            <p>
+              <span>
+                Mandarin:
+                <i class="layui-icon layui-icon-rate-solid"></i>
+                <i class="layui-icon layui-icon-rate-solid"></i>
+                <i class="layui-icon layui-icon-rate-solid"></i>
+                <i class="layui-icon layui-icon-rate-solid"></i>
+                <i class="layui-icon layui-icon-rate-solid"></i>
+                <i class="layui-icon layui-icon-rate-solid"></i>
+                <i class="layui-icon layui-icon-rate-solid"></i>
+                <i class="layui-icon layui-icon-rate-solid"></i>
+                <i class="layui-icon layui-icon-rate-solid"></i>
+                <i class="layui-icon layui-icon-rate-solid"></i>
+                <i class="layui-icon layui-icon-rate-solid"></i>
+                <i class="layui-icon layui-icon-rate-solid"></i>
+                <i class="layui-icon layui-icon-rate-solid"></i>
+                <i class="layui-icon layui-icon-rate-solid"></i>
+           
+              </span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+
+    
+
+    <script src="{% static 'layui/layui.js' %}"></script>
+
+
+    <script
+    src="https://kit.fontawesome.com/bc53a4b4cc.js"
+    crossorigin="anonymous">
+    </script>
+
+    {% block script %}
+    <script>
+    layui.use(['element', 'layer'], function(){
+      var element = layui.element;
+      var layer = layui.layer;
+      });
+    </script>
+
+    {% endblock script %}
+    
+    
+
+  </div>
+
+{% endblock content %}

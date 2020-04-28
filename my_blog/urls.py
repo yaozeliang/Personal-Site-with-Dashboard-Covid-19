@@ -20,6 +20,7 @@ urlpatterns = [
     path('notice/', include('notice.urls')),
     path('accounts/', include('allauth.urls')),
     path('api/',include("api.urls")),
+    path('resume/',include("resume.urls")),
 ]
 
 

@@ -8,8 +8,9 @@
     <!-- <a class="navbar-brand" href="#"></a> -->
     
     <a class="navbar-brand" href="/">
-      <span><img src="{% static 'images/self.jpg' %}" width="30" height="30" class="d-inline-block align-top"> 
-        YAO ZELIANG</span>
+      <!-- <span><img src="{% static 'images/self.jpg' %}" width="30" height="30" class="d-inline-block align-top"> 
+        YAO ZELIANG</span> -->
+        YAO ZELIANG
     </a>
 
     <!-- 导航入口 -->
@@ -23,7 +24,7 @@
 
 
         <li class="nav-item ">
-          <a class="nav-link " href="#">Resume</a>
+          <a class="nav-link " href="{% url 'resume:resume' %}">Resume</a>
         </li>
 
 
