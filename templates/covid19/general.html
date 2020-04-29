@@ -1,0 +1,215 @@
+{% extends "base.html" %} 
+
+{% load static %} 
+{% load article_extras %}
+
+{%block extra_css%}
+<link rel="stylesheet" href="{% static 'layui/css/layui.css' %}">
+{%endblock extra_css%}
+
+{% block title %}
+Covid-19 Dashboard
+{% endblock title %}
+
+{% block content %}
+
+<div class="layui-container ">
+
+    <div class="alert alert-danger alert-dismissible fade show mt-2" role="alert">
+        <strong>Requesting Data backend...</strong> If there's no graph, Please wait 
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+    <div class="layui-row mt-3 wrapper layui-anim layui-anim-up layui-anim-fadein">
+
+        <div class="layui-col-md-lg-10 layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+            <ul class="layui-tab-title">
+              <li class="layui-this">Global View</li>
+              <li>Europe</li>
+              <li>France</li>
+            </ul>
+
+            <div class="layui-tab-content"">
+              <div class="layui-tab-item layui-show">
+
+                <div class="layui-row">
+
+                    <div class="layui-col-md9">
+                        <p>d</p>
+                    </div>
+
+                    <div class="layui-col-md3">
+                        <!-- <blockquote class="layui-elem-quote">Total Data</blockquote> -->
+                        <fieldset class="layui-elem-field layui-field-title">
+                            <legend>Total Data</legend>
+                        </fieldset>
+
+                        <table class="table table-sm ">
+                            <thead>
+                              <tr>
+                                <th>So far</th>
+                                <th>Count</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr class="text-primary">
+                                <td>Confirmed</td>
+                                <td>{{general_data.TotalConfirmed}}</td>
+                              </tr>
+                              <tr class="text-danger">
+                                <td>Deaths</td>
+                                <td>{{general_data.TotalDeaths}}</td>
+                              </tr>
+                              <tr class="text-success">
+                                <td>Recovered</td>
+                                <td>{{general_data.TotalRecovered}}</td>
+                              </tr>
+                            </tbody>
+                        </table>
+                        
+                        <fieldset class="layui-elem-field layui-field-title">
+                            <legend>{{ today }}</legend>
+                         </fieldset>
+
+                          <table class="table table-sm ">
+                            <thead>
+                              <tr>
+                                <th>Today</th>
+                                <th>Number</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                            <tr class="text-primary">
+                                <td >NewConfirmed</td>
+                                <td>{{general_data.NewConfirmed}}</td>
+                              </tr>
+                              <tr class="text-danger">
+                                <td>NewDeaths</td>
+                                <td>{{general_data.NewDeaths}}</td>
+                              </tr>
+                              <tr class="text-success">
+                                <td>NewRecovered</td>
+                                <td>{{general_data.NewRecovered}}</td>
+                              </tr>
+                            </tbody>
+                          </table>
+
+
+                          <figure class="highcharts-figure">
+                            <div id="fr_last_five"></div>
+                          </figure>
+                    </div>
+
+
+
+                </div>
+                <!-- <div id="global_view">
+
+                </div> -->
+              </div>
+              <div class="layui-tab-item">内容2</div>
+              <div class="layui-tab-item">内容3</div>
+
+
+            </div>
+          </div> 
+
+        </div>
+    </div>
+
+
+</div>
+
+
+
+{% block script %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+          var myChart = Highcharts.chart('global_view', {
+              chart: {
+                  type: 'bar'
+              },
+              title: {
+                  text: 'Fruit Consumption'
+              },
+              xAxis: {
+                  categories: ['Apples', 'Bananas', 'Oranges']
+              },
+              yAxis: {
+                  title: {
+                      text: 'Fruit eaten'
+                  }
+              },
+              series: [{
+                  name: 'Jane',
+                  data: [1, 0, 4]
+              }, {
+                  name: 'John',
+                  data: [5, 7, 3]
+              }]
+          });
+      });
+</script>
+
+<script type="text/javascript" src="https://code.highcharts.com/highcharts.js"> </script> 
+<script type="text/javascript" src="https://code.highcharts.com/modules/exporting.js"> </script> 
+<script type="text/javascript" src="https://code.highcharts.com/modules/export-data.js"></script> 
+<script type="text/javascript" src="https://code.highcharts.com/modules/accessibility.js"></script> 
+<script src="{% static 'layui/layui.js' %}"></script>
+<script src="https://kit.fontawesome.com/bc53a4b4cc.js" crossorigin="anonymous"></script>
+<script>
+    layui.use(['element', 'layer'], function(){
+      var element = layui.element;
+      var layer = layui.layer;
+      });
+</script>
+{% endblock script %}
+
+
+
+<script>
+  var chart1 = new Highcharts.Chart({
+    chart: {
+        renderTo: 'fr_last_five',
+        type: 'column'
+    },
+    title: {
+          text: 'France in last 10 days'
+      },
+      subtitle: {
+          text: 'Source: covid19api.com'
+      },
+      xAxis: {
+          categories: ['day1','day1','day1','day1','day1'],
+          crosshair: true
+      },
+      yAxis: {
+          min: 0,
+          title: {
+              text: 'Confirmed Case'
+          }
+      },
+      tooltip: {
+          pointFormat: '<tr><td>Number</td>' +
+              '<td style="padding:0"><b>{point.y} </b></td></tr>',
+          useHTML: true
+      },
+      plotOptions: {
+          column: {
+              pointPadding: 0.2,
+              borderWidth: 0
+          }
+      },
+      series: [ {
+          name: "France",
+          data:[1,2,3,4,5],
+      }, ]
+  });
+  
+  </script>
+
+
+
+{% endblock content %}

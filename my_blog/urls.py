@@ -21,6 +21,7 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('api/',include("api.urls")),
     path('resume/',include("resume.urls")),
+    path('covid19/',include("covid19.urls")),
 ]
 
 
