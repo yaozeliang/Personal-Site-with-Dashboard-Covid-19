@@ -16,11 +16,11 @@ Covid-19 Dashboard
 <div class="layui-container ">
 
     <div class="alert alert-danger alert-dismissible fade show mt-2" role="alert">
-        <strong>Requesting Data backend...</strong> If there's no graph, Please wait 
+        <strong>Requesting Data backend...</strong> If there's no graph, Please wait 5 seconds
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-      </div>
+    </div>
 
     <div class="layui-row mt-3 wrapper layui-anim layui-anim-up layui-anim-fadein">
 
@@ -35,24 +35,28 @@ Covid-19 Dashboard
               <div class="layui-tab-item layui-show">
 
                 <div class="layui-row">
+                  
+                    <div class="layui-col-md8">
+                      <blockquote class="layui-elem-quote">Top 10 Contries With Highest Confirmed Cases Total</blockquote>
+                      <figure class="highcharts-figure">
+                        <div id="top_10_total"></div>
+                      </figure>
 
-                    <div class="layui-col-md9">
-                        <p>d</p>
+                      <blockquote class="layui-elem-quote">Top 10 Contries With Highest Confirmed Cases Today </blockquote>
+                      <figure class="highcharts-figure">
+                        <div id="top_10_today"></div>
+                      </figure>
                     </div>
 
-                    <div class="layui-col-md3">
-                        <!-- <blockquote class="layui-elem-quote">Total Data</blockquote> -->
-                        <fieldset class="layui-elem-field layui-field-title">
-                            <legend>Total Data</legend>
-                        </fieldset>
-
-                        <table class="table table-sm ">
-                            <thead>
+                    <div class="layui-col-md4">
+                        <blockquote class="layui-elem-quote">Global Cases</blockquote>
+                        <table class="table table-sm">
+                            <!-- <thead>
                               <tr>
                                 <th>So far</th>
                                 <th>Count</th>
                               </tr>
-                            </thead>
+                            </thead> -->
                             <tbody>
                               <tr class="text-primary">
                                 <td>Confirmed</td>
@@ -68,18 +72,11 @@ Covid-19 Dashboard
                               </tr>
                             </tbody>
                         </table>
-                        
-                        <fieldset class="layui-elem-field layui-field-title">
-                            <legend>{{ today }}</legend>
-                         </fieldset>
 
-                          <table class="table table-sm ">
-                            <thead>
-                              <tr>
-                                <th>Today</th>
-                                <th>Number</th>
-                              </tr>
-                            </thead>
+                        <blockquote class="layui-elem-quote">{{ today_date }}</blockquote>
+
+                        <table class="table table-sm">
+
                             <tbody>
                             <tr class="text-primary">
                                 <td >NewConfirmed</td>
@@ -94,12 +91,16 @@ Covid-19 Dashboard
                                 <td>{{general_data.NewRecovered}}</td>
                               </tr>
                             </tbody>
-                          </table>
+                        </table>
 
+                        <hr class="layui-bg-orange">
 
                           <figure class="highcharts-figure">
+                            <div id="europe_last_five"></div>
+                            <hr class="layui-bg-cyan">
                             <div id="fr_last_five"></div>
                           </figure>
+
                     </div>
 
 
@@ -125,38 +126,14 @@ Covid-19 Dashboard
 
 
 {% block script %}
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-          var myChart = Highcharts.chart('global_view', {
-              chart: {
-                  type: 'bar'
-              },
-              title: {
-                  text: 'Fruit Consumption'
-              },
-              xAxis: {
-                  categories: ['Apples', 'Bananas', 'Oranges']
-              },
-              yAxis: {
-                  title: {
-                      text: 'Fruit eaten'
-                  }
-              },
-              series: [{
-                  name: 'Jane',
-                  data: [1, 0, 4]
-              }, {
-                  name: 'John',
-                  data: [5, 7, 3]
-              }]
-          });
-      });
-</script>
+
 
 <script type="text/javascript" src="https://code.highcharts.com/highcharts.js"> </script> 
 <script type="text/javascript" src="https://code.highcharts.com/modules/exporting.js"> </script> 
 <script type="text/javascript" src="https://code.highcharts.com/modules/export-data.js"></script> 
 <script type="text/javascript" src="https://code.highcharts.com/modules/accessibility.js"></script> 
+<script type="text/javascript" src="https://code.highcharts.com/modules/cylinder.js"></script>
+<script type="text/javascript" src="https://code.highcharts.com/highcharts-3d.js"></script>
 <script src="{% static 'layui/layui.js' %}"></script>
 <script src="https://kit.fontawesome.com/bc53a4b4cc.js" crossorigin="anonymous"></script>
 <script>
@@ -172,44 +149,140 @@ Covid-19 Dashboard
 <script>
   var chart1 = new Highcharts.Chart({
     chart: {
-        renderTo: 'fr_last_five',
-        type: 'column'
+        renderTo: 'europe_last_five',
+        type: 'line',
     },
     title: {
-          text: 'France in last 10 days'
+          text: 'Main Europe Last 5 days'
       },
       subtitle: {
           text: 'Source: covid19api.com'
       },
       xAxis: {
-          categories: ['day1','day1','day1','day1','day1'],
+          categories: {{fr_5_date|safe}},
           crosshair: true
       },
       yAxis: {
-          min: 0,
+          min: 100000,
           title: {
               text: 'Confirmed Case'
           }
       },
-      tooltip: {
-          pointFormat: '<tr><td>Number</td>' +
-              '<td style="padding:0"><b>{point.y} </b></td></tr>',
-          useHTML: true
+      legend: {
+        reversed: true
+    },
+      series: [ {name: "France",data:{{fr_5_confirmed}}}, 
+                {name: "Spain",data:{{sp_5_confirmed}}},
+                {name: "Uk",data:{{en_5_confirmed}}},
+                {name: "Italy",data:{{it_5_confirmed}}},
+                {name: "Germany",data:{{ger_5_confirmed}}},
+      ]
+  });
+</script>
+
+
+<script>
+  var chart2 = new Highcharts.Chart({
+    chart: {
+        renderTo: 'fr_last_five',
+        type: 'line',
+    },
+    title: {
+          text: 'France in Last 5 days'
       },
-      plotOptions: {
-          column: {
-              pointPadding: 0.2,
-              borderWidth: 0
+      xAxis: {
+          categories: {{fr_5_date|safe}},
+          crosshair: true
+      },
+      yAxis: {
+          min: 150000,
+          title: {
+              text: 'Total Cases'
           }
       },
-      series: [ {
-          name: "France",
-          data:[1,2,3,4,5],
-      }, ]
+      legend: {
+        reversed: true
+    },
+      series: [ {name: "France",data:{{fr_5_confirmed}}}]
   });
+</script>
+
+
+<script>
+
+  var chart3 = new Highcharts.Chart({
+    chart: {
+      renderTo: 'top_10_total',
+      type: 'column',
+      options3d: {
+        enabled: true,
+        alpha: 15,
+        beta: 15,
+        depth: 50,
+        // /* viewDistance: 25 */
+      }
+    },
+    title: {
+          text: ''
+      },
+      xAxis: {
+          categories: {{top_10_coutnrys_total|safe}}
+      },
+      yAxis: {title: {text: 'Counts'}},
+      series: [{
+          type: 'column',
+          name: 'Confirmed',
+          data: {{top_10_confirm_total}},
+      }, {
+          type: 'column',
+          name: 'Deaths',
+          data:{{top_10_death_total}},
+      }, {
+          type: 'column',
+          name: 'Recovered',
+          data:{{top_10_recover_total}},
+      }]
+  });
+  
   
   </script>
 
 
+<script>
+
+  var chart4 = new Highcharts.Chart({
+    chart: {
+      renderTo: 'top_10_today',
+      type: 'bar',
+      options3d: {
+        enabled: true,
+        alpha: 15,
+        beta: 15,
+        depth: 50,
+      }
+    },
+    title: {
+        text: ''
+    },
+    plotOptions: {
+        series: {
+            depth: 25,
+            colorByPoint: true
+        }
+    },
+    xAxis: {
+          categories: {{top_10_coutnrys_today|safe}},
+          },
+    yAxis: {
+      title: {text: 'Number'},
+           },
+    series: [{data: {{top_10_confirm_today|safe}},
+              name: 'New Case',
+              },]
+});
+  
+  </script>
 
 {% endblock content %}
+
+

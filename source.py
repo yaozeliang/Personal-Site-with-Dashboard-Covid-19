@@ -52,6 +52,4 @@ def get_country_last_n_days(countryname,num_days):
 
 
 
-# fr_last = get_country_last_n_days('France',5)
-# print(fr_last)
-# print(all_country_data['Country'])
+print(get_country_last_n_days('ES',5))

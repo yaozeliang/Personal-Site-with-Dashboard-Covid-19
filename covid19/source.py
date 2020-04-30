@@ -35,9 +35,13 @@ def get_all_country_data():
 
     df_country = pd.DataFrame(country_data)
     df_country['Date'] = df_country['Date'].apply(lambda x:x.split('T')[0])
-    df_country = df_country.sort_values(by=['TotalConfirmed'], ascending = False)
+    df_total = df_country.sort_values(by=['TotalConfirmed'], ascending = False).head(10)
+    df_today = df_country.sort_values(by=['NewConfirmed'], ascending = False).head(10)
 
-    return df_country
+    return {
+        'total':df_total,
+        'today':df_today,
+    }
 
 
 def get_country_last_n_days(countryname,num_days):
@@ -51,3 +55,5 @@ def get_country_last_n_days(countryname,num_days):
     return df
 
 
+
+# print(get_country_last_n_days('GB',5))
