@@ -31,6 +31,7 @@ swapper = "==1.1.2.post1"
 whitenoise = "==3.3.1"
 pandas = "*"
 numpy = "*"
+django-allauth = "*"
 
 [requires]
 python_version = "3.8"
