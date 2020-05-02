@@ -15,6 +15,9 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" 
     integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" 
     crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="{% static 'layui/css/layui.css' %}"> -->
+
+
 
     {%block extra_css%}
     {%endblock extra_css%}
@@ -46,7 +49,14 @@
     
     <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
     <script src="{% static 'layer/layer.js' %}"></script>
-    
+    <!-- <script src="{% static 'layui/layui.js' %}"></script> -->
+    <!-- <script src="https://kit.fontawesome.com/bc53a4b4cc.js" crossorigin="anonymous"></script> -->
+    <script>
+        layui.use(['element', 'layer'], function(){
+        var element = layui.element;
+        var layer = layui.layer;
+        });
+    </script>
    
     {% block script %}
     {% endblock script %}
