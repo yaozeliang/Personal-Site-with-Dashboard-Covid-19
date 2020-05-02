@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'c20s(vym*s_ne845ek_o5e$jm=x*pgq6=@-ry@6(=23mv(k2w='
+SECRET_KEY = '*'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -175,17 +175,16 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 
 # SMTP服务器，改为你的邮箱的smtp!
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST = *
 # 改为你自己的邮箱名！
-EMAIL_HOST_USER = 'attractionlawyao@gmail.com'
-# 你的邮箱密码
-EMAIL_HOST_PASSWORD = '147258369Qwert#'
+EMAIL_HOST_USER = *
+EMAIL_HOST_PASSWORD = *
 # 发送邮件的端口
-EMAIL_PORT = 587 
+EMAIL_PORT = *
 # 是否使用 TLS
 EMAIL_USE_TLS = True
 # 默认的发件人
-DEFAULT_FROM_EMAIL = 'YAO ZELIANG blog attractionlawyao@gmail.com'
+DEFAULT_FROM_EMAIL = *
 
 
 
